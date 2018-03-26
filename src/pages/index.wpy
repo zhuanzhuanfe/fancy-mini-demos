@@ -1,0 +1,37 @@
+<template>
+  <view>
+    fancy-mini项目功能演示
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'fancy-mini-demos',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

@@ -1,0 +1,36 @@
+<style lang="less">
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+import toast from 'fancy-mini/lib/toast';
+
+wepy.component.prototype.$toast = toast;
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/toast',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+  }
+
+  globalData = {
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+  }
+}
+</script>

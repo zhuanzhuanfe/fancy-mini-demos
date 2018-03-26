@@ -1,0 +1,7 @@
+dependencies:
+  fancy-mini: 'link:../__package_previews__/fancy-mini/fancy-mini'
+registry: 'http://registry.npm.taobao.org/'
+shrinkwrapMinorVersion: 1
+shrinkwrapVersion: 3
+specifiers:
+  fancy-mini: ^0.0.1

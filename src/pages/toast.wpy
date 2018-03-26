@@ -1,0 +1,124 @@
+<template>
+  <view class="section">
+    <view class="header">效果示例</view>
+    <view class="actions">
+      <button class="action" @tap="onBriefTxt">简洁toast</button>
+      <button class="action" @tap="onMidTxt">较长toast</button>
+      <button class="action" @tap="onLongTxt">巨长toast</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="header">功能说明</view>
+    <view class="body">
+      <view wx:for="{{infos}}" wx:for-item="info" class="info">
+        <view class="title">{{info.title}}</view>
+        <view class="content">{{info.content}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'toast示例',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      infos: [
+        {
+          title: '背景：',
+          content:
+`1. 原生toast存在长度限制，超过7个汉字会被截断；
+2. 自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。`,
+        },
+        {
+          title: '功能：',
+          content:
+`1. 不受长度限制、不受层级约束的原生toast
+2. 支持Promise`,
+        },
+        {
+          title: '原理：',
+          content:
+`1. 文案简洁时，使用带图标的原生toast
+2. 文案较多时，自动改用不带图标的原生toast
+3. 文案巨长时，自动改用系统弹窗
+尤其适用于后端返回的不定长报错信息/提示文案`,
+        }
+      ],
+    }
+
+    computed = {}
+
+    methods = {
+      async onBriefTxt(){
+        await this.$toast({
+          title: '一二三四五六七',
+          type: 'success',
+        });
+        console.log('toast over');
+      },
+      async onMidTxt(){
+        await this.$toast({
+          title: '一二三四五六七八九十一二三四',
+          type: 'success',
+        });
+        console.log('toast over');
+      },
+      async onLongTxt(){
+        await this.$toast({
+          title: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          type: 'success',
+        });
+        console.log('toast over');
+      },
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .section {
+    margin: 50rpx 0;
+    .header {
+      color: #504a4d;
+      font-size: 28rpx;
+      line-height: 42rpx;
+      font-weight: 500;
+    }
+    .body {
+      padding: 0 0 0 30rpx;
+      .info{
+        font-size: 28rpx;
+        line-height: 42rpx;
+        font-weight: 400;
+        margin: 20rpx 0;
+        .title {
+          color: #504a4d;
+          &::before {
+            content: '- '
+          }
+        }
+        .content {
+          color: #969696;
+          white-space: pre-wrap;
+        }
+      }
+    }
+  }
+</style>
