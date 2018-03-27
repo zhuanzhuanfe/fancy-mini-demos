@@ -64,21 +64,21 @@
       async onBriefTxt(){
         await this.$toast({
           title: '一二三四五六七',
-          type: 'success',
+          type: 'fail',
         });
         console.log('toast over');
       },
       async onMidTxt(){
         await this.$toast({
           title: '一二三四五六七八九十一二三四',
-          type: 'success',
+          type: 'fail',
         });
         console.log('toast over');
       },
       async onLongTxt(){
         await this.$toast({
           title: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
-          type: 'success',
+          type: 'fail',
         });
         console.log('toast over');
       },

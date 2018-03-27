@@ -9,10 +9,9 @@
     "dev:web": "wepy build --output web",
     "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "previewDevVersion": "preview ../fancy-mini/ ."
+    "previewDevVersion": "npm uninstall fancy-mini --no-save && preview ../fancy-mini/ ."
   },
-  "wepy": {
-  },
+  "wepy": {},
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -32,6 +31,7 @@
     "package-preview": "^1.0.5",
     "wepy-cli": "^1.7.2-alpha2",
     "wepy-compiler-babel": "^1.5.1",
-    "wepy-compiler-less": "^1.3.10"
+    "wepy-compiler-less": "^1.3.10",
+    "wepy-plugin-uglifyjs": "^1.3.7"
   }
 }
