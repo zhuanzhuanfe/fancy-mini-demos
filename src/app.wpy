@@ -11,6 +11,9 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/toast',
+      'pages/navigate/pageA',
+      'pages/navigate/pageB',
+      'pages/navigate/pageC',
     ],
     window: {
       backgroundTextStyle: 'light',

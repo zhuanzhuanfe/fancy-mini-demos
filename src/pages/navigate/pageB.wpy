@@ -1,0 +1,44 @@
+<template>
+  <Body :pageName.sync="pageName" :pageOptions.sync="pageOptions"></Body>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Body from '../../components/navigate/Body';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'B',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      Body,
+    }
+
+    data = {
+      pageName: 'B',
+      pageOptions: {},
+    }
+
+    computed = {
+    }
+
+    methods = {
+    }
+
+    onLoad(options) {
+      this.pageOptions = options;
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

@@ -1,0 +1,91 @@
+<template>
+  <view>
+    <view class="info">
+      <view class="name">{{pageName}}</view>
+      <view class="options" @tap="onOptions">options:\n{{pageOptionsStr}}</view>
+    </view>
+    <view class="entries">
+      <button class="entry" wx:for="{{entries}}" wx:for-item="entry" wx:key="{{index}}" @tap="onEntry({{index}})">{{entry.txt}}</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {appendUrlParam} from 'fancy-mini/lib/operationKit';
+
+  export default class extends wepy.component {
+    props = {
+      pageName: {
+        type: String
+      },
+      pageOptions: {
+        type: Object
+      },
+    }
+
+    data = {
+      entries: [
+        {
+          txt: '打开A',
+          href: '/pages/navigate/pageA',
+        },
+        {
+          txt: '打开B',
+          href: '/pages/navigate/pageB',
+        },
+        {
+          txt: '打开C',
+          href: '/pages/navigate/pageC',
+        },
+      ]
+    }
+
+    computed = {
+      pageOptionsStr(){
+        return JSON.stringify(this.pageOptions, null, 2);
+      }
+    }
+
+    methods = {
+      onEntry(idx){
+        let entry = this.entries[idx];
+        this.$wxPromise.navigateTo({
+          url: appendUrlParam(entry.href, {timestamp: Date.now()})
+        });
+      },
+      onOptions(){
+        wx.showModal({
+          title: 'pageOptions',
+          content: this.pageOptionsStr,
+          showCancel: false,
+        })
+      },
+    }
+
+    components = {}
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .info {
+    overflow: hidden;
+    .name {
+      font-size: 200rpx;
+      font-weight: 300;
+      color: #43474c;
+      width: 40%;
+      float: left;
+    }
+    .options {
+      margin: 0 0 0 40%;
+      white-space: pre-wrap;
+      font-size: 28rpx;
+      color: #43474c;
+      line-height: 1.2;
+    }
+  }
+</style>
