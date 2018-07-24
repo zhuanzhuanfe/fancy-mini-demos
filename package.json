@@ -15,10 +15,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "wepy": "^1.6.0",
-    "wepy-async-function": "^1.4.4",
-    "wepy-com-toast": "^1.0.2",
-    "fancy-mini": "^0.0.1"
+    "fancy-mini": "^0.0.9",
+    "wepy": "^1.7.1",
+    "wepy-async-function": "^1.4.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

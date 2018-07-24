@@ -1,6 +1,7 @@
 <template>
-  <view>
-    fancy-mini项目功能演示
+  <view class="title">fancy-mini项目功能演示</view>
+  <view class="entries">
+    <button class="entry" wx:for="{{entries}}" wx:for-item="entry" wx:key="title" @tap="onEntry({{index}})">{{entry.title}}</button>
   </view>
 </template>
 
@@ -18,11 +19,29 @@
 
     components = {}
 
-    data = {}
+    data = {
+      entries: [
+        {
+          title: '长度自适应的原生toast',
+          href: '/pages/toast'
+        },
+        {
+          title: '无限层级路由策略',
+          href: '/pages/navigate/pageA'
+        },
+      ]
+    }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      onEntry(idx){
+        let entry = this.entries[idx];
+        this.$wxPromise.navigateTo({
+          url: entry.href
+        });
+      }
+    }
 
     onLoad() {
     }
@@ -33,5 +52,7 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-
+  .title {
+    margin: 30rpx 0;
+  }
 </style>
