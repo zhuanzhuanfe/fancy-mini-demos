@@ -1,7 +1,23 @@
 <template>
-  <view class="title">fancy-mini项目功能演示</view>
-  <view class="entries">
-    <button class="entry" wx:for="{{entries}}" wx:for-item="entry" wx:key="title" @tap="onEntry({{index}})">{{entry.title}}</button>
+  <view class="project">
+    <view class="title">小程序代码库<view class="name">fancy-mini</view>功能演示</view>
+    <view class="actions">
+      <view class="action">访问</view>
+      <view class="action">复制链接</view>
+      <view class="action">分享</view>
+    </view>
+  </view>
+
+  <view class="categories">
+    <view class="category" wx:for="{{categories}}" wx:for-item="category" wx:key="title">
+      <view class="name">{{category.name}}</view>
+      <view class="features">
+        <view class="feature" wx:for="{{category.features}}" wx:for-item="feature" wx:key="title">
+          <view class="title">{{feature.title}}</view>
+          <view class="desc">{{feature.desc}}</view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -13,32 +29,49 @@
       backgroundColor: '#fff',
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'fancy-mini-demos',
+      navigationBarTitleText: 'fancy-mini',
       navigationBarTextStyle: 'black'
     }
 
     components = {}
 
     data = {
-      entries: [
+      project: {
+        name: 'fancy-mini',
+        href: '',
+      },
+      categories: [
         {
-          title: '长度自适应的原生toast',
-          href: '/pages/toast'
+          name: '小程序能力搭建/增强',
+          features: [
+            {
+              title: '无限层级路由方案',
+              desc: '系统性解决超过10层打不开新页面问题',
+              href: '/pages/navigate/pageA'
+            },
+          ]
         },
         {
-          title: '无限层级路由策略',
-          href: '/pages/navigate/pageA'
+          name: '小程序疑难杂症参考处理',
+          features: [
+            {
+              title: '长度自适应的原生toast',
+              desc: '文案过长处理，优雅降级',
+              href: '/pages/toast'
+            },
+          ]
         },
-      ]
+
+      ],
     }
 
     computed = {}
 
     methods = {
-      onEntry(idx){
-        let entry = this.entries[idx];
+      onFeature(cateIdx, feaIdx){
+        let feature = this.categories[cateIdx].features[feaIdx];
         this.$wxPromise.navigateTo({
-          url: entry.href
+          url: feature.href
         });
       }
     }
@@ -49,10 +82,70 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-
+  Page {
+    background: #fff;
+  }
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-  .title {
-    margin: 30rpx 0;
+  @import (reference)"../../node_modules/fancy-mini/lib-style/common";
+
+  .project {
+    background: #fdfdfd;
+    margin: 0 22rpx;
+    padding: 13rpx 18rpx;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    .title {
+      font-size: 25rpx;
+      color: #b4b4b4;
+      line-height: 35rpx;
+
+      .name {
+        display: inline;
+        margin: 0 10rpx;
+      }
+    }
+    .actions {
+      display: flex;
+      margin: 0 0 0 10rpx;
+      .action {
+        font-size: 25rpx;
+        color: #b4b4b4;
+        line-height: 35rpx;
+        text-decoration: underline;
+        margin: 0 10rpx 0 0;
+      }
+    }
+  }
+  .categories {
+    margin: 68rpx 30rpx 0;
+    .category {
+      margin: 0 0 40rpx;
+      .name {
+        font-size:28rpx;
+        color:#787878;
+        line-height: 1;
+        margin: 0 0 19rpx;
+      }
+      .feature {
+        position: relative;
+        .border(solid; #ececec; 5rpx);
+        padding: 40rpx;
+        margin: 0 0 30rpx;
+        .title {
+          font-size:33rpx;
+          color:#151515;
+          line-height:43rpx;
+        }
+        .desc {
+          margin: 15rpx 0 0;
+          font-size:24rpx;
+          color:#a2a2a2;
+          line-height:34rpx;
+          white-space: pre-wrap;
+        }
+      }
+    }
   }
 </style>

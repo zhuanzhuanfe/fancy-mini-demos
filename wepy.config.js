@@ -20,7 +20,8 @@ module.exports = {
       compress: prod
     },
     /*sass: {
-      outputStyle: 'compressed'
+      outputStyle: 'compressed',
+      includePaths: ['node_modules'],
     },*/
     babel: {
       sourceMap: true,
