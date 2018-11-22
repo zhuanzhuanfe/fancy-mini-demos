@@ -15,7 +15,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "fancy-mini": "^1.0.1",
+    "fancy-mini": "latest",
     "wepy": "^1.7.1",
     "wepy-async-function": "^1.4.4"
   },

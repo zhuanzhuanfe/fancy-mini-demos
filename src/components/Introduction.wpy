@@ -1,0 +1,85 @@
+<template>
+  <view class="infoList">
+    <view wx:for="{{formattedInfoArr}}" wx:for-item="info" class="info">
+      <view class="title">{{info.title}}</view>
+      <view class="content">{{info.content}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class extends wepy.component {
+    props = {
+      /**
+       * 文案列表，格式形如：
+       *[
+         {
+           title: '背景：',
+           content: `
+             1. 原生toast存在长度限制，超过7个汉字会被截断；
+             2. 自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。
+           `,
+         },
+         {
+           title: '功能：',
+           content: `
+             1. 不受长度限制、不受层级约束的原生toast
+             2. 支持Promise
+           `,
+         },
+       ]
+       */
+      infoArr: {
+        type: Array,
+        default(){
+          return [];
+        }
+      }
+    }
+
+    data = {
+    }
+
+    computed = {
+      formattedInfoArr(){
+        return this.infoArr.map(info=>({
+          title: info.title || '',
+          content: trim(info.content).split('\n').map(trim).join('\n')
+        }));
+      },
+    }
+
+    methods = {}
+
+    components = {}
+  }
+
+  function trim(str='') {
+    return str.replace(/(^\s*)|(\s*$)/g, '');
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .infoList {
+    margin: 50rpx 0;
+    .info{
+      font-size: 28rpx;
+      line-height: 42rpx;
+      font-weight: 400;
+      margin: 20rpx 0;
+      .title {
+        color: #504a4d;
+      }
+      .content {
+        color: #969696;
+        white-space: pre-wrap;
+        padding: 0 0 0 24rpx;
+      }
+    }
+  }
+</style>

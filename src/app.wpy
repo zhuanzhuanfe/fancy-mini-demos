@@ -9,13 +9,15 @@ import './appPlugin'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index/index',
-      'pages/toast',
-      'pages/navigate/pageA',
-      'pages/navigate/pageB',
-      'pages/navigate/pageC',
+      'pages/index/index',  //首页
 
-      'pages/curtain/curtain', //层级中转页面，默认为空白页，避免自定义返回行为时出现原生上一层级内容一闪而过的现象
+      //无限层级路由方案
+      'pages/navigate/pageA', //页面跳转演示
+      'pages/navigate/pageB', //页面跳转演示
+      'pages/navigate/pageC', //页面跳转演示
+      'pages/curtain/curtain', //层级中转页面，避免自定义返回行为时出现原生上一层级内容一闪而过的现象
+
+      'pages/toast/toast',  //toast功能演示
     ],
     window: {
       backgroundTextStyle: 'light',

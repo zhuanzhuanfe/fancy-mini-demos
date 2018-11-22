@@ -1,0 +1,92 @@
+<template>
+  <view class="actions">
+    <button class="action" @tap="onBriefTxt">简洁toast</button>
+    <button class="action" @tap="onMidTxt">较长toast</button>
+    <button class="action" @tap="onLongTxt">巨长toast</button>
+  </view>
+
+  <Introduction :infoArr.sync="infoArr"></Introduction>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Introduction from '@/components/Introduction';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'toast示例',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      Introduction,
+    }
+
+    data = {
+      infoArr: [
+        {
+          title: '问题：',
+          content: `
+            1. 原生toast存在长度限制，超过7个汉字会被截断；
+            2. 自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。
+          `,
+        },
+        {
+          title: '功能：',
+          content: `
+            1. 不受长度限制、可以覆盖原生组件的toast
+            2. 支持Promise
+          `,
+        },
+        {
+          title: '原理：',
+          content: `
+            1. 文案简洁时，使用带图标的原生toast
+            2. 文案较多时，自动改用不带图标的原生toast
+            3. 文案巨长时，自动改用系统弹窗
+            尤其适用于后端返回的不定长报错信息/提示文案
+          `,
+        }
+      ],
+    }
+
+    computed = {}
+
+    methods = {
+      async onBriefTxt(){
+        await this.$toast({
+          title: '一二三四五六七',
+          type: 'fail',
+        });
+        console.log('toast over');
+      },
+      async onMidTxt(){
+        await this.$toast({
+          title: '一二三四五六七八九十一二三四',
+          type: 'fail',
+        });
+        console.log('toast over');
+      },
+      async onLongTxt(){
+        await this.$toast({
+          title: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          type: 'fail',
+        });
+        console.log('toast over');
+      },
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

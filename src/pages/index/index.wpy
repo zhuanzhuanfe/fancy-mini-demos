@@ -56,8 +56,8 @@
           features: [
             {
               title: '长度自适应的原生toast',
-              desc: '文案过长处理，优雅降级',
-              href: '/pages/toast'
+              desc: '支持巨长文案；可以覆盖层级最高的原生组件',
+              href: '/pages/toast/toast'
             },
           ]
         },
