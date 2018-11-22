@@ -2,6 +2,7 @@
   "name": "fancy-mini-demos",
   "version": "0.0.1",
   "description": "A WePY project",
+  "repository": "https://github.com/zhuanzhuanfe/fancy-mini-demos",
   "main": "dist/app.js",
   "scripts": {
     "dev": "wepy build --watch",
@@ -15,7 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "fancy-mini": "latest",
+    "fancy-mini": "^1.0.5",
     "wepy": "^1.7.1",
     "wepy-async-function": "^1.4.4"
   },

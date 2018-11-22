@@ -161,7 +161,9 @@
         font-size:28rpx;
         color:#787878;
         line-height: 1;
-        margin: 0 0 19rpx;
+        background: #fff;
+        padding: 0 0 19rpx;
+        .sticky(0);
       }
       .feature {
         position: relative;
