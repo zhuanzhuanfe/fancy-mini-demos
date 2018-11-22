@@ -89,10 +89,20 @@
           title: setRes.succeeded ? '链接已复制' : '操作失败',
         });
       },
-      onDebug(){
+      @noConcurrent
+      async onDebug(){
+        let recordRes = await this.$wxResolve.getStorage({key: 'enableDebug'});
+        let isDebugging = recordRes.succeeded && recordRes.data;
+        let enableDebug = !isDebugging;
+
         wx.setEnableDebug({
-          enableDebug: true,
+          enableDebug,
         });
+
+        wx.setStorage({
+          key: 'enableDebug',
+          data: enableDebug,
+        })
       },
       onFeature(cateIdx, feaIdx){
         let feature = this.categories[cateIdx].features[feaIdx];
