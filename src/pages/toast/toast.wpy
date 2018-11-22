@@ -5,7 +5,7 @@
     <button class="action" @tap="onLongTxt">巨长toast</button>
   </view>
 
-  <Introduction :infoArr.sync="infoArr"></Introduction>
+  <Introduction :intros.sync="intros"></Introduction>
 </template>
 
 <script>
@@ -26,29 +26,30 @@
     }
 
     data = {
-      infoArr: [
+      intros: [
         {
-          title: '问题：',
+          title: '解决问题：',
           content: `
-            1. 原生toast存在长度限制，超过7个汉字会被截断；
-            2. 自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。
+            原生toast存在长度限制，超过7个汉字会被截断；
+            自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。
           `,
         },
         {
           title: '功能：',
           content: `
-            1. 不受长度限制、可以覆盖原生组件的toast
-            2. 支持Promise
+            不受长度限制、可以覆盖原生组件的toast
+            支持Promise
           `,
         },
         {
           title: '原理：',
           content: `
-            1. 文案简洁时，使用带图标的原生toast
-            2. 文案较多时，自动改用不带图标的原生toast
-            3. 文案巨长时，自动改用系统弹窗
+            文案简洁时，使用带图标的原生toast
+            文案较多时，自动改用不带图标的原生toast
+            文案巨长时，自动改用系统弹窗
             尤其适用于后端返回的不定长报错信息/提示文案
           `,
+          contentLayout: 'unorderedList',
         }
       ],
     }

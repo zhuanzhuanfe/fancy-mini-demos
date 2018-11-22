@@ -1,8 +1,10 @@
 <template>
-  <view class="infoList">
-    <view wx:for="{{formattedInfoArr}}" wx:for-item="info" class="info">
-      <view class="title">{{info.title}}</view>
-      <view class="content">{{info.content}}</view>
+  <view class="intros">
+    <view wx:for="{{formattedIntros}}" wx:for-item="intro" class="intro">
+      <view class="title">{{intro.title}}</view>
+      <view class="content {{intro.contentLayout}}">
+        <view class="term" wx:for="{{intro.terms}}" wx:for-item="term" wx:key="*this">{{term}}</view>
+      </view>
     </view>
   </view>
 </template>
@@ -16,22 +18,23 @@
        * 文案列表，格式形如：
        *[
          {
-           title: '背景：',
-           content: `
-             1. 原生toast存在长度限制，超过7个汉字会被截断；
-             2. 自定义toast组件 无法覆盖textarea、canvas、video、map等层级最高的原生组件；且需要每个页面反复引入，使用较为繁琐。
-           `,
-         },
+          title: '演示：',
+          content: `
+             点击按钮打开新页面，会发现哪怕层级超过10层，依旧可以持续打开新页面；
+             点击系统返回按钮，会发现页面按照打开顺序，正常逐层返回；
+             页面顶部会显示页面标识和打开时间，用以区分不同页面。
+           `, //文案换行将会被保留，但首尾空行、每行前后空白符将被移除
+           contentLayout: 'orderedList', //文案排版：orderedList-有序列表 | unorderedList-无序列表 | pre-原样展现
+        },
          {
-           title: '功能：',
+           title: '解决问题：',
            content: `
-             1. 不受长度限制、不受层级约束的原生toast
-             2. 支持Promise
-           `,
+              小程序原生页面存在层级限制，超过一定层数就会无法打开新页面。目前这个限制是不超过10层。
+            `,
          },
        ]
        */
-      infoArr: {
+      intros: {
         type: Array,
         default(){
           return [];
@@ -43,10 +46,11 @@
     }
 
     computed = {
-      formattedInfoArr(){
-        return this.infoArr.map(info=>({
-          title: info.title || '',
-          content: trim(info.content).split('\n').map(trim).join('\n')
+      formattedIntros(){
+        return this.intros.map(intro=>({
+          title: intro.title || '',
+          terms: trim(intro.content).split('\n').map(trim),
+          contentLayout: intro.contentLayout || 'orderedList',
         }));
       },
     }
@@ -65,9 +69,9 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-  .infoList {
-    margin: 50rpx 0;
-    .info{
+  .intros {
+    margin: 50rpx 30rpx;
+    .intro{
       font-size: 28rpx;
       line-height: 42rpx;
       font-weight: 400;
@@ -77,8 +81,37 @@
       }
       .content {
         color: #969696;
-        white-space: pre-wrap;
-        padding: 0 0 0 24rpx;
+        .term {
+          padding: 0 0 0 24rpx;
+          position: relative;
+        }
+        &.orderedList {
+          counter-reset: termCount;
+          .term {
+            counter-increment: termCount;
+            padding-left: 48rpx;
+            &::before {
+              content: counter(termCount)+'. ';
+              position: absolute;
+              left: 24rpx;
+              top: 0;
+            }
+            &:only-child::before {
+              content: '';
+            }
+          }
+        }
+        &.unorderedList {
+          .term {
+            padding-left: 48rpx;
+            &::before {
+              content: '- ';
+              position: absolute;
+              left: 24rpx;
+              top: 0;
+            }
+          }
+        }
       }
     }
   }

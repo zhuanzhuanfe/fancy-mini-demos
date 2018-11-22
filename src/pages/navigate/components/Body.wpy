@@ -7,12 +7,14 @@
     <view class="entries">
       <button class="entry" wx:for="{{entries}}" wx:for-item="entry" wx:key="{{index}}" @tap="onEntry({{index}})">{{entry.txt}}</button>
     </view>
+    <Introduction :intros.sync="intros"></Introduction>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import {appendUrlParam} from 'fancy-mini/lib/operationKit';
+  import Introduction from '@/components/Introduction';
 
   export default class extends wepy.component {
     props = {
@@ -38,7 +40,32 @@
           txt: '打开C',
           href: '/pages/navigate/pageC',
         },
-      ]
+      ],
+      intros: [
+        {
+          title: '演示：',
+          content: `
+             点击按钮打开新页面，会发现哪怕层级超过10层，依旧可以持续打开新页面；
+             点击系统返回按钮，会发现页面按照打开顺序，正常逐层返回；
+             页面顶部会显示页面标识和打开时间，用以区分不同页面。
+           `,
+        },
+        {
+          title: '解决问题：',
+          content: `
+             小程序原生页面存在层级限制，超过一定层数就会无法打开新页面。目前是不能超过10层。
+             业务流程复杂/页面相互引用循环访问，很容易导致层级溢出，造成点击无响应。
+           `,
+          contentLayout: 'unorderedList',
+        },
+        {
+          title: '功能：',
+          content: `
+             支持无限层级，避免层级较深时无法打开新页面；
+             支持引入一些路由相关的扩展功能，如：免并发、数据预先加载、实例覆盖自动恢复等。
+           `,
+        },
+      ],
     }
 
     computed = {
@@ -63,7 +90,9 @@
       },
     }
 
-    components = {}
+    components = {
+      Introduction,
+    }
   }
 </script>
 
