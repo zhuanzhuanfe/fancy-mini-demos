@@ -18,6 +18,8 @@ export default class extends wepy.app {
       'pages/curtain/curtain', //层级中转页面，避免自定义返回行为时出现原生上一层级内容一闪而过的现象
 
       'pages/toast/toast',  //toast功能演示
+      'pages/dialog/dialog', //弹窗功能演示
+      'pages/dialog/userRules', //弹窗功能演示-用户使用协议
     ],
     window: {
       backgroundTextStyle: 'light',

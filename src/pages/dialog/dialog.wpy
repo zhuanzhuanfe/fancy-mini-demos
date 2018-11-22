@@ -1,0 +1,191 @@
+<template>
+  <view>
+    <view class="actions">
+      <button class="action" wx:for="{{cases}}" wx:for-item="case" wx:key="id" @tap="onAction({{index}})">{{case.name}}</button>
+    </view>
+    <Introduction :intros.sync="intros"></Introduction>
+    <DialogCommon></DialogCommon>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import DialogCommon from '@/components/fancy-mini/DialogCommon';
+  import Introduction from '@/components/Introduction';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '通用弹窗',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      DialogCommon,
+      Introduction,
+    }
+
+    data = {
+      cases: [
+        {
+          name: '普通提示',
+          id: 'commonShort',
+        },
+        {
+          name: '长文案提示',
+          id: 'commonLong',
+        },
+        {
+          name: '分享功能',
+          id: 'share',
+        },
+        {
+          name: '获取手机号、Promise',
+          id: 'phoneNumber',
+        },
+      ],
+      intros: [
+        {
+          title: '支持各种样式配置：',
+          contentLayout: 'unorderedList',
+          content: `
+            有标题/无标题
+            长文案/短文案（过长时自动定高滚动）
+            单个/多个按钮
+            按钮版式：水平铺开/垂直铺开、主按钮高亮
+            支持传入自定义内联样式覆盖默认样式
+          `,
+        },
+        {
+          title: '支持各种功能配置',
+          contentLayout: 'unorderedList',
+          content: `
+            右上角展示/不展示关闭图标
+            关闭图标回调
+            点击按钮后是否自动关闭弹窗
+            按钮回调
+            按钮设置分享
+            按钮获取手机号
+            支持Promise，将弹窗各交互路径交互结果统一返回
+          `
+        },
+      ]
+    }
+
+    computed = {}
+
+    methods = {
+      async onAction(idx){
+        let demoCase = this.cases[idx];
+        this.handlers[demoCase.id] && this.handlers[demoCase.id]();
+      }
+    }
+
+    handlers = {
+      commonShort: ()=>{
+        this.$invoke('DialogCommon','open',{
+          title: '提示',
+          content: '普通短文案提示',
+          buttons: [{
+            text: '好的',
+            clickHandler: null,
+          }],
+        });
+      },
+      commonLong: ()=>{
+        this.$invoke('DialogCommon','open',{
+          title: '活动规则',
+          content: '好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则\n好长好长的活动规则',
+          buttons: [{
+            text: '知道了',
+            clickHandler: null,
+          }],
+        });
+      },
+      share: ()=>{
+        this.$invoke('DialogCommon','open',{
+          title: '',
+          content: '分享给好友可以额外获得一次机会哦',
+          buttons: [{
+            text: '取消',
+            clickHandler: null,
+          }, {
+            text: '立即分享',
+            openType: 'share',
+            clickHandler: null,
+          }],
+        });
+      },
+      phoneNumber: async ()=>{
+        await this.$wxPromise.login();
+        let bindRes = await this.$invoke('DialogCommon','asyncOpen',{
+          title: '绑定手机号',
+          content: 'blabla...',
+          onClose: ()=>{ return {result: 'cancel'}; }, //点击关闭时，在关闭回调中返回操作结果：cancel
+          buttons: [{
+            text: '查看用户协议',
+            preventClose: true, //点击查看用户协议时，不关闭弹窗，因而不影响弹窗最终操作结果
+            clickHandler: ()=>{
+              this.$wxPromise.navigateTo({url: '/pages/dialog/userRules'});
+            },
+          }, {
+            text: '立即绑定',
+            openType: 'getPhoneNumber', //配置openType使按钮具备获取手机号功能
+            clickHandler: (btn, ev)=>{  //点击立即绑定时，在回调中获取手机号，进行相关逻辑，并返回最终操作结果：success/fail
+              console.log('getPhoneNumber, btn:', btn, 'ev:', ev);
+              let succeeded = ev.detail.errMsg.includes('ok');
+              //根据ev.detail中数据解码获得手机号
+              //....
+              return {result: succeeded ? 'success' : 'fail'};
+            },
+          }],
+        });
+
+        //统一处理弹窗各交互路径交互结果，如： 弹窗-关闭图标、弹窗-立即绑定、弹窗-查看用户协议-关闭图标、弹窗-查看用户协议-立即绑定等
+        console.log('bindRes:', bindRes);
+        switch (bindRes.result) {
+          case 'success': //弹窗-立即绑定-授权-绑定成功、弹窗-查看用户协议-返回-立即绑定-授权-绑定成功等
+            this.$toast({
+              type: 'success',
+              title: '绑定成功'
+            });
+            break;
+          case 'cancel': //弹窗-关闭图标、弹窗-查看用户协议-返回-关闭图标等
+            this.$toast({
+              type: 'fail',
+              title: '操作取消'
+            });
+            break;
+          case 'fail': //弹窗-立即绑定-授权-绑定失败、//弹窗-立即绑定-授权失败等
+          default:
+            this.$toast({
+              type: 'fail',
+              title: '绑定失败'
+            });
+        }
+      },
+    }
+
+    onLoad() {
+    }
+
+    onShareAppMessage(){
+      return {
+        title: '小程序代码库fancy-mini功能演示',
+        imageUrl: '',
+        path: '/pages/index/index?channel=share',
+      }
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .action {
+    margin: 10rpx 0;
+  }
+</style>

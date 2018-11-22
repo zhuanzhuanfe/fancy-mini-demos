@@ -2,8 +2,9 @@
   <view class="project">
     <view class="title">小程序代码库<view class="name">{{project.name}}</view>功能演示</view>
     <view class="actions">
-      <button class="action" @tap="onProjectLink">复制链接</button>
+      <button class="action" @tap="onProjectLink">链接</button>
       <button class="action" open-type="share">分享</button>
+      <button class="action" @tap="onDebug">console</button>
     </view>
   </view>
 
@@ -61,7 +62,16 @@
             },
           ]
         },
-
+        {
+          name: '小程序ui组件库',
+          features: [
+            {
+              title: '通用弹窗',
+              desc: '样式配置、按钮分享、Promise、...',
+              href: '/pages/dialog/dialog',
+            },
+          ]
+        }
       ],
     }
 
@@ -77,6 +87,11 @@
         await this.$toast({
           type: setRes.succeeded ? 'success' : 'fail',
           title: setRes.succeeded ? '链接已复制' : '操作失败',
+        });
+      },
+      onDebug(){
+        wx.setEnableDebug({
+          enableDebug: true,
         });
       },
       onFeature(cateIdx, feaIdx){
