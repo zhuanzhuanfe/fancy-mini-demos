@@ -9,7 +9,7 @@ import './appPlugin'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index',
+      'pages/index/index',
       'pages/toast',
       'pages/navigate/pageA',
       'pages/navigate/pageB',

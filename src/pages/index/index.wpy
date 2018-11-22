@@ -1,18 +1,17 @@
 <template>
   <view class="project">
-    <view class="title">小程序代码库<view class="name">fancy-mini</view>功能演示</view>
+    <view class="title">小程序代码库<view class="name">{{project.name}}</view>功能演示</view>
     <view class="actions">
-      <view class="action">访问</view>
-      <view class="action">复制链接</view>
-      <view class="action">分享</view>
+      <button class="action" @tap="onProjectLink">复制链接</button>
+      <button class="action" open-type="share">分享</button>
     </view>
   </view>
 
   <view class="categories">
-    <view class="category" wx:for="{{categories}}" wx:for-item="category" wx:key="title">
+    <view class="category" wx:for="{{categories}}" wx:for-item="category" wx:key="title" wx:for-index="cateIdx">
       <view class="name">{{category.name}}</view>
       <view class="features">
-        <view class="feature" wx:for="{{category.features}}" wx:for-item="feature" wx:key="title">
+        <view class="feature" wx:for="{{category.features}}" wx:for-item="feature" wx:key="title" @tap="onFeature({{cateIdx}}, {{index}})">
           <view class="title">{{feature.title}}</view>
           <view class="desc">{{feature.desc}}</view>
         </view>
@@ -23,6 +22,7 @@
 
 <script>
   import wepy from 'wepy';
+  import {noConcurrent} from 'fancy-mini/lib/decorator/noConcurrent';
 
   export default class extends wepy.page {
     config = {
@@ -38,7 +38,7 @@
     data = {
       project: {
         name: 'fancy-mini',
-        href: '',
+        href: 'https://github.com/zhuanzhuanfe/fancy-mini',
       },
       categories: [
         {
@@ -68,6 +68,17 @@
     computed = {}
 
     methods = {
+      @noConcurrent
+      async onProjectLink(){
+        let setRes = await this.$wxResolve.setClipboardData({
+          data: this.project.href,
+        });
+
+        await this.$toast({
+          type: setRes.succeeded ? 'success' : 'fail',
+          title: setRes.succeeded ? '链接已复制' : '操作失败',
+        });
+      },
       onFeature(cateIdx, feaIdx){
         let feature = this.categories[cateIdx].features[feaIdx];
         this.$wxPromise.navigateTo({
@@ -78,6 +89,14 @@
 
     onLoad() {
     }
+
+    onShareAppMessage(){
+      return {
+        title: '小程序代码库fancy-mini功能演示',
+        imageUrl: '',
+        path: '/pages/index/index?channel=share',
+      }
+    }
   }
 </script>
 
@@ -87,7 +106,7 @@
   }
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-  @import (reference)"../../node_modules/fancy-mini/lib-style/common";
+  @import (reference)"../../../node_modules/fancy-mini/lib-style/common";
 
   .project {
     background: #fdfdfd;
@@ -110,11 +129,12 @@
       display: flex;
       margin: 0 0 0 10rpx;
       .action {
+        .clear();
         font-size: 25rpx;
         color: #b4b4b4;
         line-height: 35rpx;
         text-decoration: underline;
-        margin: 0 10rpx 0 0;
+        padding: 15rpx; //增大点击区域
       }
     }
   }
