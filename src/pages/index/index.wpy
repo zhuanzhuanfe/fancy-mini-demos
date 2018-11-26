@@ -19,11 +19,14 @@
       </view>
     </view>
   </view>
+
+  <DialogCommon></DialogCommon>
 </template>
 
 <script>
   import wepy from 'wepy';
   import {noConcurrent} from 'fancy-mini/lib/decorator/noConcurrent';
+  import DialogCommon from '@/components/fancy-mini/DialogCommon';
 
   export default class extends wepy.page {
     config = {
@@ -34,7 +37,9 @@
       navigationBarTextStyle: 'black'
     }
 
-    components = {}
+    components = {
+      DialogCommon,
+    }
 
     data = {
       project: {
@@ -96,18 +101,25 @@
       },
       @noConcurrent
       async onDebug(){
-        let recordRes = await this.$wxResolve.getStorage({key: 'enableDebug'});
-        let isDebugging = recordRes.succeeded && recordRes.data;
-        let enableDebug = !isDebugging;
-
-        wx.setEnableDebug({
-          enableDebug,
+        await this.$invoke('DialogCommon','asyncOpen',{
+          title: '',
+          content: '开启调试模式可以在vConsole中查看更多信息',
+          buttons: [{
+            text: '关闭调试',
+            clickHandler: ()=>{
+              wx.setEnableDebug({
+                enableDebug: false,
+              });
+            },
+          }, {
+            text: '打开调试',
+            clickHandler: ()=>{
+              wx.setEnableDebug({
+                enableDebug: true,
+              });
+            },
+          }],
         });
-
-        wx.setStorage({
-          key: 'enableDebug',
-          data: enableDebug,
-        })
       },
       onFeature(cateIdx, feaIdx){
         let feature = this.categories[cateIdx].features[feaIdx];
