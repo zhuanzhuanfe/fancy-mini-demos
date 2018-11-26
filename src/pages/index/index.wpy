@@ -50,14 +50,19 @@
               desc: '系统性解决超过10层打不开新页面问题',
               href: '/pages/navigate/pageA'
             },
+            {
+              title: '入口构造工具',
+              desc: 'PM&运营 自助构造投放链接；FE&QA 开发测试线下功能',
+              href: '/pages/tools/customEntry'
+            },
           ]
         },
         {
           name: '小程序疑难杂症参考处理',
           features: [
             {
-              title: '长度自适应的原生toast',
-              desc: '支持巨长文案；可以覆盖层级最高的原生组件',
+              title: 'toast过长截断问题',
+              desc: '支持巨长文案、支持覆盖层级最高的原生组件、Promise',
               href: '/pages/toast/toast'
             },
           ]

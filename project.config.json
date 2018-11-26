@@ -15,7 +15,7 @@
 	"cloudfunctionRoot": "cloudFunctions/",
 	"libVersion": "2.2.4",
 	"appid": "wx0c5b0ddc84a1c0b9",
-	"projectname": "fancy-mini-demos",
+	"projectname": "fancyDemos",
 	"scripts": {},
 	"condition": {
 		"search": {
@@ -46,7 +46,7 @@
 				{
 					"id": 1,
 					"name": "temp",
-					"pathName": "pages/dialog/dialog",
+					"pathName": "pages/tools/customEntry",
 					"query": ""
 				}
 			]

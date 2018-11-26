@@ -1,0 +1,44 @@
+<template>
+  <view>
+    <CustomEntry></CustomEntry>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CustomEntry from '@/components/fancy-mini/CustomEntry';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '入口构造工具',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      CustomEntry,
+    }
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    onLoad() {
+    }
+
+    onShareAppMessage(res){
+      return this.$invoke('CustomEntry', 'onShareAppMessage', res);
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>
