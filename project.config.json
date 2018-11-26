@@ -12,8 +12,9 @@
 	},
 	"compileType": "miniprogram",
 	"miniprogramRoot": "dist/",
+	"cloudfunctionRoot": "cloudFunctions/",
 	"libVersion": "2.2.4",
-	"appid": "",
+	"appid": "wx0c5b0ddc84a1c0b9",
 	"projectname": "fancy-mini-demos",
 	"scripts": {},
 	"condition": {
