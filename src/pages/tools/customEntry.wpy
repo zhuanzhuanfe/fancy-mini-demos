@@ -1,6 +1,6 @@
 <template>
   <view>
-    <CustomEntry></CustomEntry>
+    <CustomEntry :createQrCodeHandler.sync="createQrCodeHandler"></CustomEntry>
   </view>
 </template>
 
@@ -26,6 +26,10 @@
     computed = {}
 
     methods = {}
+
+    createQrCodeHandler = ({url})=>{
+      console.log('createQrCodeHandler, url:', url);
+    };
 
     onLoad() {
     }

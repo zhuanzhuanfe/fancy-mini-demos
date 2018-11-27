@@ -6,7 +6,8 @@ cloud.init()
 
 //从微信服务器中获取新的token（会导致现有token失效）
 async function refreshToken(){
-  let appAuth = await cloud.database().collection('auth').doc('appAuth').get().data;
+  let appAuthRes = await cloud.database().collection('auth').doc('appAuth').get();
+  let appAuth = appAuthRes.data;
   
   let tokenRes = await request.get({
     url: 'https://api.weixin.qq.com/cgi-bin/token',

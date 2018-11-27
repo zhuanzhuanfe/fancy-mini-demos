@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
 
   let qrRes = await request.post({
     url: 'https://api.weixin.qq.com/wxa/getwxacodeunlimit',
-    qs: {
+    form: {
       access_token: accessToken,
       scene: event.scene,
       page: event.page,
