@@ -18,7 +18,8 @@
   "dependencies": {
     "fancy-mini": "^1.0.5",
     "wepy": "^1.7.1",
-    "wepy-async-function": "^1.4.4"
+    "wepy-async-function": "^1.4.4",
+    "wx-server-sdk": "0.0.26"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

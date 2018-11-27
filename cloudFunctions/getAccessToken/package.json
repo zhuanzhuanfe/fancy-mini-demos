@@ -1,5 +1,5 @@
 {
-  "name": "qrCode",
+  "name": "getAccessToken",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
     "wx-server-sdk": "latest"
   }
 }

@@ -39,6 +39,13 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+    if (!wx.cloud) {
+      console.error('基础库版本低于 2.2.3， 无法使用云开发，将会影响部分功能体验。')
+    } else {
+      wx.cloud.init({
+        traceUser: true,
+      })
+    }
   }
 }
 </script>
