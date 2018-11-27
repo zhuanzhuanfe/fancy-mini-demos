@@ -14,7 +14,11 @@
          class="dialog-container-buttons-button {{button.main ? 'main' : ''}}"
               @tap="onButton({{index}}, {{$event}})">
           {{button.text}}
-          <button open-type="{{button.openType}}" data-share-data="{{button.shareData}}" @getphonenumber="onGetPhoneNumber({{index}}, {{$event}})">{{button.buttonText}}</button>
+          <button open-type="{{button.openType}}" data-share-data="{{button.shareData}}"
+                  @getphonenumber="onGetPhoneNumber({{index}}, {{$event}})"
+                  @getuserinfo="onGetUserInfo({{index}}, {{$event}})"
+                  @opensetting="onOpenSetting({{index}}, {{$event}})"
+          >{{button.buttonText}}</button>
         </view>
       </view>
     </view>
@@ -64,7 +68,7 @@
       },
       onButton(idx, ev){
         let button = this.options.buttons[idx];
-        if (button.openType == 'getPhoneNumber') { //特殊按钮在特殊事件中处理，不在此处回调
+        if (['getPhoneNumber','getUserInfo','openSetting'].includes(button.openType)) { //特殊按钮在特殊事件中处理，不在此处回调
           if (!button.preventClose)
             this.close();
           return;
@@ -73,8 +77,13 @@
         this.handleBtn(button, ev);
       },
       onGetPhoneNumber(idx, ev){
-        let button = this.options.buttons[idx];
-        this.handleBtn(button, ev);
+        this.handleBtn(this.options.buttons[idx], ev);
+      },
+      onGetUserInfo(idx, ev){
+        this.handleBtn(this.options.buttons[idx], ev);
+      },
+      onOpenSetting(idx, ev){
+        this.handleBtn(this.options.buttons[idx], ev);
       },
       onScroll(){},
     }

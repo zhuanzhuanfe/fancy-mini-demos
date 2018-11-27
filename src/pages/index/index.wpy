@@ -81,7 +81,11 @@
               href: '/pages/dialog/dialog',
             },
           ]
-        }
+        },
+        {
+          name: '更多演示逐步补全中...',
+          features: []
+        },
       ],
     }
 

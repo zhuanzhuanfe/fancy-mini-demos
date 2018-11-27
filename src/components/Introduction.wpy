@@ -1,6 +1,6 @@
 <template>
   <view class="intros">
-    <view wx:for="{{formattedIntros}}" wx:for-item="intro" class="intro">
+    <view wx:for="{{formattedIntros}}" wx:for-item="intro" wx:key="title" class="intro">
       <view class="title">{{intro.title}}</view>
       <view class="content {{intro.contentLayout}}">
         <view class="term" wx:for="{{intro.terms}}" wx:for-item="term" wx:key="*this">{{term}}</view>

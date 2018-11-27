@@ -122,7 +122,7 @@
         await this.$wxPromise.login();
         let bindRes = await this.$invoke('DialogCommon','asyncOpen',{
           title: '绑定手机号',
-          content: 'blabla...',
+          content: '功能：\n1.弹窗按钮完成手机号、用户信息等授权功能\n2.Promise统一返回弹窗各交互路径交互结果，如：弹窗-关闭图标、弹窗-立即绑定-拒绝授权、弹窗-查看用户协议-立即绑定-同意授权等\n\n当前小程序不支持调用手机号接口，使用授权用户信息进行流程演示\n\n欲体验拒绝授权情形请先取消已有授权：右上角...-关于fancyDemos-右上角...-设置-关闭“使用我的用户信息”',
           onClose: ()=>{ return {result: 'cancel'}; }, //点击关闭时，在关闭回调中返回操作结果：cancel
           buttons: [{
             text: '查看用户协议',
@@ -132,7 +132,7 @@
             },
           }, {
             text: '立即绑定',
-            openType: 'getPhoneNumber', //配置openType使按钮具备获取手机号功能
+            openType: 'getUserInfo', //'getPhoneNumber', //配置openType使按钮具备获取手机号功能
             clickHandler: (btn, ev)=>{  //点击立即绑定时，在回调中获取手机号，进行相关逻辑，并返回最终操作结果：success/fail
               console.log('getPhoneNumber, btn:', btn, 'ev:', ev);
               let succeeded = ev.detail.errMsg.includes('ok');
