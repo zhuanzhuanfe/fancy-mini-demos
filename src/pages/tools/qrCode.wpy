@@ -1,0 +1,89 @@
+<template>
+  <view>
+    <view class="action" @tap="onCreate">获取测试二维码</view>
+
+    <QrCode :decodeParamsHandler.sync="decodeParamsHandler"></QrCode>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import QrCode from '@/components/fancy-mini/QrCode';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '二维码测试工具',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      QrCode,
+    }
+
+    data = {}
+
+    computed = {}
+
+    methods = {
+      onCreate(){
+        this.$wxPromise.navigateTo({
+          url: '/pages/tools/customEntry',
+        });
+      },
+    }
+
+    decodeParamsHandler = async(path)=>{
+      let scene = path.match(/scene=([^"&']*)/) && path.match(/scene=([^"&']*)/)[1];
+      if (!scene){
+        return {
+          code: -1,
+          errMsg: "[decodeParams failed] no scene found"
+        };
+      }
+
+      let decodeRes = await wx.cloud.callFunction({
+        name: 'decodeQrParams',
+        data: {
+          scene
+        }
+      });
+      console.log('decodeRes:', decodeRes);
+
+      if (decodeRes.respCode != 0){
+        return {
+          code: -2,
+          errMsg: "[decodeParams failed] api failed"
+        }
+      }
+
+      return {
+        code: 0,
+        errMsg: "ok",
+        params: decodeRes.respData.params,
+      };
+    }
+
+    onLoad() {
+    }
+
+    onShareAppMessage(res){
+      return this.$invoke('QrCode', 'onShareAppMessage', res);
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .action {
+    font-size: 25rpx;
+    color: #b4b4b4;
+    line-height: 35rpx;
+    text-decoration: underline;
+    padding: 20rpx 15rpx; //增大点击区域
+  }
+</style>

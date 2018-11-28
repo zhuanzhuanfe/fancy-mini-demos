@@ -21,6 +21,7 @@ export default class extends wepy.app {
       'pages/dialog/dialog', //弹窗功能演示
       'pages/dialog/userRules', //弹窗功能演示-用户使用协议
       'pages/tools/customEntry', //入口构造工具
+      'pages/tools/qrCode', //二维码测试工具
     ],
     window: {
       backgroundTextStyle: 'light',

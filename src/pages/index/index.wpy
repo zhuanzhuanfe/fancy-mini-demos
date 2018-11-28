@@ -60,6 +60,11 @@
               desc: 'PM&运营 自助构造投放链接；FE&QA 开发测试线下功能',
               href: '/pages/tools/customEntry'
             },
+            {
+              title: '二维码测试工具',
+              desc: '在开发版/体验版打开二维码；查看二维码编码信息',
+              href: '/pages/tools/qrCode'
+            },
           ]
         },
         {
@@ -73,7 +78,7 @@
           ]
         },
         {
-          name: '小程序ui组件库',
+          name: '小程序组件库',
           features: [
             {
               title: '通用弹窗',
