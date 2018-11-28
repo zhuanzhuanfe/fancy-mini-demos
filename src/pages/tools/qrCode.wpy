@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="action" @tap="onCreate">获取测试二维码</view>
+    <!--<view class="action" @tap="onCreate">获取测试二维码</view>  todo:支持生成二维码-->
 
     <QrCode :decodeParamsHandler.sync="decodeParamsHandler"></QrCode>
   </view>
@@ -44,7 +44,7 @@
         };
       }
 
-      let decodeRes = await wx.cloud.callFunction({
+      let decodeRes = await wx.cloud.callFunction({ //todo: 支持生成二维码、支持参数解码
         name: 'decodeQrParams',
         data: {
           scene

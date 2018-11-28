@@ -106,6 +106,9 @@
       async onOpen(){
         let info = await this.inspectQrCode();
 
+        if (!info.landingPath)
+          return;
+
         let navRes = await wxResolve.navigateTo({url: fulfillURL(info.landingPath)});
         if (!navRes.succeeded && navRes.errMsg.toLowerCase().includes('tabbar')) {
           this.$invoke('DialogCommon','open',{
@@ -120,6 +123,9 @@
       },
       async onCheckChannel(){
         let info = await this.inspectQrCode();
+        if (!info.landingPath)
+          return;
+
         this.DIYShare = {
           title: `二维码落地链接：${info.landingPath}`,
           path: fulfillURL(info.landingPath),
@@ -149,6 +155,14 @@
     async inspectQrCode(){
       let scanRes = await wxPromise.scanCode();
       console.log('scanRes:', scanRes);
+
+      if (!scanRes.path) {
+        await this.$toast({
+          title: '请使用当前小程序的二维码，权限原因其它小程序的二维码无法识别',
+          duration: 2500
+        });
+        return {};
+      }
 
       let landingPath = scanRes.path;
       let decodeRes = this.decodeParamsHandler ? (await this.decodeParamsHandler(landingPath)) : {

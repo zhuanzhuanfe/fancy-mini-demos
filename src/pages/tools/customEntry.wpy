@@ -27,8 +27,11 @@
 
     methods = {}
 
-    createQrCodeHandler = ({url})=>{
+    createQrCodeHandler = async ({url})=>{
       console.log('createQrCodeHandler, url:', url);
+      await this.$toast({
+        title: '该功能暂未支持'
+      });
     };
 
     onLoad() {
