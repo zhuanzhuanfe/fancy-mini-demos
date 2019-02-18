@@ -1,0 +1,60 @@
+<template>
+  <view>
+    <button @tap="onSubmitControl" wx:if="{{groupType==='control'}}">提交</button>
+    <button @tap="onSubmitExp" wx:if="{{groupType==='experimental'}}">提交</button>
+    <view class="submitHistory">
+      <view class="record" wx:for="{{submitHistory}}" wx:for-item="record" wx:key="{{index}}">{{record}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {delay} from 'fancy-mini/lib/operationKit';
+  import {noConcurrent,mergingStep,singleAisle,makeMutex} from 'fancy-mini/lib/decorator/noConcurrent';
+
+  export default class extends wepy.component {
+    props = {
+      groupType: {
+        type: String,
+      }
+    }
+
+    data = {
+      submitHistory: [],
+    }
+
+    computed = {}
+
+    methods = {
+      async onSubmitControl(){
+        await this.doSubmit();
+      },
+      @noConcurrent
+      async onSubmitExp(){
+        await this.doSubmit();
+      },
+    }
+
+    async doSubmit(){
+      let timestamp = new Date();
+      let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
+      this.submitHistory.push('提交 '+semanticTime);
+      await delay(600); //表单处理、提交到服务端、返回结果解析等造成的延时
+    }
+    components = {}
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .submitHistory {
+    .record {
+      font-size: 28rpx;
+      line-height: 42rpx;
+      color: #969696;
+    }
+  }
+</style>

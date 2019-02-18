@@ -1,0 +1,96 @@
+<template>
+  <view>
+    <view class="scenario">
+      <view class="title">免并发：防重</view>
+      <view class="desc">在上一次操作完成之前，不响应重复操作</view>
+      <view class="demo">e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单</view>
+      <view class="workspace">
+        <view class="group"><!--对照组-->
+          <view class="title">无免并发处理</view>
+          <view class="body">
+            <NoConcurrent1 groupType="control"></NoConcurrent1>
+          </view>
+        </view>
+        <view class="group"><!--实验组-->
+          <view class="title">免并发处理</view>
+          <view class="body">
+            <NoConcurrent2 groupType="experimental"></NoConcurrent2>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import NoConcurrent from './components/NoConcurrent';
+  import MergingStep from './components/MergingStep';
+  import SingleAisle from './components/SingleAisle';
+  import MakeMutex from './components/MakeMutex';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '免并发修饰器',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {
+      NoConcurrent1: NoConcurrent,
+      NoConcurrent2: NoConcurrent,
+      MergingStep1: MergingStep,
+      MergingStep2: MergingStep,
+      SingleAisle1: SingleAisle,
+      SingleAisle2: SingleAisle,
+      MakeMutex1: MakeMutex,
+      MakeMutex2: MakeMutex,
+    }
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  @import "../../../node_modules/fancy-mini/lib-style/common";
+.scenario {
+  font-size: 28rpx;
+  line-height: 42rpx;
+  color: #969696;
+  > .title {
+    color: #504a4d;
+    font-weight: bold;
+  }
+  .desc, .demo {
+  }
+  .workspace {
+    margin: 10rpx 0 0;
+    display: flex;
+    .group {
+      width: 50%;
+      box-sizing: border-box;
+      position: relative;
+      &:not(:last-child){
+        .border-right(solid; #eee);
+      }
+      .title {
+      }
+      .body {
+
+      }
+    }
+  }
+}
+</style>

@@ -1,0 +1,28 @@
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class extends wepy.component {
+    props = {}
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    components = {}
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

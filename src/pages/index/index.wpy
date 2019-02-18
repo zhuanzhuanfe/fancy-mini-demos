@@ -88,6 +88,16 @@
           ]
         },
         {
+          name: '实用工具函数',
+          features: [
+            {
+              title: '免并发修饰器',
+              desc: '按钮点击防重、公共步骤并合、弹窗逐个展示、...',
+              href: '/pages/noConcurrent/noConcurrent',
+            },
+          ]
+        },
+        {
           name: '更多演示逐步补全中...',
           features: []
         },
