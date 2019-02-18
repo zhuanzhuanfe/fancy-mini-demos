@@ -1,0 +1,167 @@
+<template>
+  <view class="modal" wx:if="{{show}}">
+    <view class="window">
+      <view class="title">{{options.title}}</view>
+      <scroll-view scroll-y="{{options.contentScrollable}}" class="content {{options.contentScrollable ? 'scrollable' : ''}}">{{options.content}}</scroll-view>
+      <view class="buttons">
+        <button wx:for="{{options.buttons}}" wx:for-item="button" wx:key="text" class="button"
+                open-type="{{button.openType}}"
+                @tap="onButton({{index}}, {{$event}})"
+                @getuserinfo="onGetUserInfo({{index}}, {{$event}})"
+                @opensetting="onOpenSetting({{index}}, {{$event}})"
+        >{{button.text}}</button>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {deepClone} from 'fancy-mini/lib/operationKit';
+
+  export default class extends wepy.component {
+    props = {}
+
+    data = {
+      show: false,
+      options: {},
+      defaultOptions: {
+        title: '',
+        content: '',
+        contentScrollable: 'auto',
+        buttons: [
+          {
+            text: '',
+            openType: '',
+            clickHandler: null,
+            preventClose: false,
+          }
+        ]
+      },
+      unloadListeners: [],
+    }
+
+    computed = {}
+
+    methods = {
+      onButton(idx, ev){
+        let button = this.options.buttons[idx];
+        button.clickLog && this.$log(button.clickLog);
+        if (['getUserInfo', 'openSetting'].includes(button.openType)) { //特殊按钮在特殊事件中处理，不在此处回调
+          return;
+        }
+
+        this.handleBtn(button, ev);
+      },
+      onGetUserInfo(idx, ev){
+        this.handleBtn(this.options.buttons[idx], ev);
+      },
+      onOpenSetting(idx, ev){
+        this.handleBtn(this.options.buttons[idx], ev);
+      },
+    }
+
+    handleBtn(button, ev){
+      typeof button.clickHandler === "function" && button.clickHandler(Object.assign({}, button), ev);
+      this.show = !!button.preventClose;
+      this.$apply();
+    }
+
+    open(options){
+      let opts = Object.assign({}, this.defaultOptions, options);
+      opts.buttons = opts.buttons.map((btn,idx,arr)=> {
+        return Object.assign({},
+          this.defaultOptions.buttons[idx] || this.defaultOptions.buttons[0],
+          typeof btn==='string' ? {text: btn} : btn
+        );
+      });
+
+      if (opts.contentScrollable==='auto') //当文案行数/字数过多时，定高滚动展示；内容较少时，高度随内容伸展
+        opts.contentScrollable = opts.content.split('\n').length>=7 || opts.content.length>=18*7;
+
+      this.options = opts;
+
+      this.show = true;
+      this.$apply();
+      options.showLog && this.$log(options.showLog);
+    }
+    asyncOpen(options){
+      return new Promise((resolve, reject)=>{
+        let asyncOpts = deepClone(options);
+
+        asyncOpts.buttons.forEach((btn, idx)=>{
+          btn.clickHandler = async function(...args){
+            let res = options.buttons[idx].clickHandler ? options.buttons[idx].clickHandler.apply(this, args) : {};
+            if (!btn.preventClose)
+              resolve(res);
+          }
+        });
+        this.unloadListeners.push(reject);
+        this.open(asyncOpts);
+      });
+    }
+    close(){
+      this.show = false;
+      this.$apply();
+    }
+
+    onUnload(){
+      this.unloadListeners.forEach(f=>f());
+    }
+    components = {}
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  @import (reference)"../../../../node_modules/fancy-mini/lib-style/common";
+  .modal {
+    position: fixed;
+    .takeFullSpace();
+    z-index: @zIdx-dialog;
+    background: rgba(0,0,0,0.5);
+    .window {
+      box-sizing: border-box;
+      width: 560rpx;
+      margin: 450rpx auto 0;
+      background: #fff;
+      border-radius: 8rpx;
+      .title {
+        font-size: 36rpx;
+        color: #000;
+        text-align: center;
+        line-height: 50rpx;
+        padding: 50rpx 36rpx 0;
+      }
+      .content {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 24rpx 36rpx 0;
+        font-size: 30rpx;
+        color: #888;
+        text-align: center;
+        line-height: 42rpx;
+        white-space: pre-wrap;
+        &.scrollable {
+          height: 354rpx;
+          text-align: left;
+        }
+      }
+      .buttons {
+        margin: 30rpx 0 0;
+        position: relative;
+        .border-top(solid; #e5e5e5);
+        .button {
+          display: block;
+          text-align: center;
+          font-size: 36rpx;
+          color: #02bb00;
+          height: 100rpx;
+          line-height: 100rpx;
+        }
+      }
+    }
+  }
+</style>

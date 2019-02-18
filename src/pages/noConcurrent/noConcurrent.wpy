@@ -8,13 +8,19 @@
         <view class="group"><!--对照组-->
           <view class="title">无免并发处理</view>
           <view class="body">
-            <NoConcurrent1 groupType="control"></NoConcurrent1>
+            <NoConcurrent1 groupType="control" wx:if="{{scenario.id==='noConcurrent'}}"></NoConcurrent1>
+            <SingleAisle1 groupType="control" wx:if="{{scenario.id==='singleAisle'}}"></SingleAisle1>
+            <MergingStep1 groupType="control" wx:if="{{scenario.id==='mergingStep'}}"></MergingStep1>
+            <MakeMutex1 groupType="control" wx:if="{{scenario.id==='makeMutex'}}"></MakeMutex1>
           </view>
         </view>
         <view class="group"><!--实验组-->
           <view class="title">免并发处理</view>
           <view class="body">
-            <NoConcurrent2 groupType="experimental"></NoConcurrent2>
+            <NoConcurrent2 groupType="experimental" wx:if="{{scenario.id==='noConcurrent'}}"></NoConcurrent2>
+            <SingleAisle2 groupType="experimental" wx:if="{{scenario.id==='singleAisle'}}"></SingleAisle2>
+            <MergingStep2 groupType="experimental" wx:if="{{scenario.id==='mergingStep'}}"></MergingStep2>
+            <MakeMutex2 groupType="experimental" wx:if="{{scenario.id==='makeMutex'}}"></MakeMutex2>
           </view>
         </view>
       </view>
@@ -57,21 +63,23 @@
           desc: '在上一次操作完成之前，不响应重复操作',
           demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
         },
-        /*{
-          id: 'singleAisle',
-          title: '免并发：防重',
-          desc: '在上一次操作完成之前，不响应重复操作',
-          demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
-        },
         {
+          id: 'singleAisle',
+          title: '免并发：依次执行',
+          desc: '使得并发调用逐个顺序执行',
+          demo: `e.g.页面中多处同时调用弹窗函数
+未使用本修饰器时，执行时序：弹窗1、弹窗2、弹窗3同时展现，用户同时看到多个弹窗堆在一起and/or弹窗相互覆盖
+使用本修饰器时，执行时序：弹窗1展现、等待交互、用户关闭 => 弹窗2展现、等待交互、用户关闭 => 弹窗3展现、等待交互、用户关闭，弹窗函数依次顺序执行`,
+        },
+        /*{
           id: 'mergingStep',
-          title: '免并发：防重',
+          title: '免并发：合并执行',
           desc: '在上一次操作完成之前，不响应重复操作',
           demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
         },
         {
           id: 'makeMutex',
-          title: '免并发：防重',
+          title: '免并发：多函数互斥',
           desc: '在上一次操作完成之前，不响应重复操作',
           demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
         },*/
@@ -93,14 +101,19 @@
 <style lang="less" rel="stylesheet/less" scoped>
   @import "../../../node_modules/fancy-mini/lib-style/common";
 .scenario {
+  margin: 60rpx 0;
   font-size: 28rpx;
   line-height: 42rpx;
   color: #969696;
   > .title {
+    .sticky(0);
+    background: #fff;
+    font-size: 32rpx;
     color: #504a4d;
     font-weight: bold;
   }
   .desc, .demo {
+    white-space: pre-wrap;
   }
   .workspace {
     margin: 10rpx 0 0;

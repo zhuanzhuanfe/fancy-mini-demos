@@ -46,8 +46,9 @@
 				{
 					"id": 1,
 					"name": "temp",
-					"pathName": "pages/tools/customEntry",
-					"query": ""
+					"pathName": "pages/noConcurrent/noConcurrent",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

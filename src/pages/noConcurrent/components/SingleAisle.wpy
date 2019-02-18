@@ -1,22 +1,104 @@
 <template>
   <view>
-
+    <button @tap="onActionControl" wx:if="{{groupType==='control'}}">弹窗</button>
+    <button @tap="onActionExp" wx:if="{{groupType==='experimental'}}">弹窗</button>
+    <view class="submitHistory">
+      <view class="record" wx:for="{{submitHistory}}" wx:for-item="record" wx:key="{{index}}">{{record}}</view>
+    </view>
+    <Dialog></Dialog>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import {noConcurrent,mergingStep,singleAisle,makeMutex} from 'fancy-mini/lib/decorator/noConcurrent';
+  import {delay} from 'fancy-mini/lib/operationKit';
+  import Dialog from './Dialog';
 
   export default class extends wepy.component {
-    props = {}
+    props = {
+      groupType: {
+        type: String,
+      }
+    }
 
-    data = {}
+    data = {
+      clkCountControl: 0,
+      clkCountExp: 0,
+      contents: [
+        '恭喜获得奖励0',
+        '恭喜获得奖励1',
+        '恭喜获得奖励2',
+      ],
+      submitHistory: [],
+    }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      async onActionControl(){
+        //打印点击日志
+        let contentIdx = this.clkCountControl%this.contents.length;
+        let content = this.contents[contentIdx];
+        ++this.clkCountControl;
 
-    components = {}
+        let timestamp = new Date();
+        let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
+        this.submitHistory.push(semanticTime+' 文案'+contentIdx);
+        this.$apply();
+
+        //延迟一段时间再弹窗，使用户可以在弹窗出现前进行多次点击，便于触发并发现象
+        await delay(500);
+
+        //进行弹窗
+        this.popDialogControl(content);
+      },
+      async onActionExp(){
+        //打印点击日志
+        let contentIdx = this.clkCountExp%this.contents.length;
+        let content = this.contents[contentIdx];
+        ++this.clkCountExp;
+
+        let timestamp = new Date();
+        let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
+        this.submitHistory.push(semanticTime+' 文案'+contentIdx);
+        this.$apply();
+
+        //延迟一段时间再弹窗，使用户可以在弹窗出现前进行多次点击，便于触发并发现象
+        await delay(500);
+
+        //进行弹窗
+        this.popDialogExp(content);
+      },
+    }
+
+    async popDialogControl(content){//无免并发处理，连续多次调用会同时进行多次弹窗，造成弹窗相互覆盖
+      await this.$invoke('Dialog', 'asyncOpen', {
+        title: '',
+        content,
+        buttons: [
+          {
+            text: '立即领取'
+          }
+        ]
+      });
+    }
+    @singleAisle //免并发处理：依次执行
+    async popDialogExp(content){//有免并发处理，连续多次调用会依次顺序进行，前一个弹窗关闭后才开始展示下一个弹窗
+      await this.$invoke('Dialog', 'asyncOpen', {
+        title: '',
+        content,
+        buttons: [
+          {
+            text: '立即领取'
+          }
+        ]
+      });
+    }
+
+    components = {
+      Dialog,
+    }
   }
 </script>
 
@@ -24,5 +106,11 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-
+  .submitHistory {
+    .record {
+      font-size: 28rpx;
+      line-height: 42rpx;
+      color: #969696;
+    }
+  }
 </style>
