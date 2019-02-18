@@ -1,9 +1,9 @@
 <template>
   <view>
-    <view class="scenario">
-      <view class="title">免并发：防重</view>
-      <view class="desc">在上一次操作完成之前，不响应重复操作</view>
-      <view class="demo">e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单</view>
+    <view class="scenario" wx:for="{{scenarios}}" wx:for-item="scenario">
+      <view class="title">{{scenario.title}}</view>
+      <view class="desc">{{scenario.desc}}</view>
+      <view class="demo">{{scenario.demo}}</view>
       <view class="workspace">
         <view class="group"><!--对照组-->
           <view class="title">无免并发处理</view>
@@ -49,7 +49,34 @@
       MakeMutex2: MakeMutex,
     }
 
-    data = {}
+    data = {
+      scenarios: [
+        {
+          id: 'noConcurrent',
+          title: '免并发：防重',
+          desc: '在上一次操作完成之前，不响应重复操作',
+          demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
+        },
+        /*{
+          id: 'singleAisle',
+          title: '免并发：防重',
+          desc: '在上一次操作完成之前，不响应重复操作',
+          demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
+        },
+        {
+          id: 'mergingStep',
+          title: '免并发：防重',
+          desc: '在上一次操作完成之前，不响应重复操作',
+          demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
+        },
+        {
+          id: 'makeMutex',
+          title: '免并发：防重',
+          desc: '在上一次操作完成之前，不响应重复操作',
+          demo: 'e.g.用户连续多次点击同一个提交按钮，只响应一次，而不是同时提交多份表单',
+        },*/
+      ]
+    }
 
     computed = {}
 

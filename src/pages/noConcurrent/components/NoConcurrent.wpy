@@ -27,11 +27,11 @@
     computed = {}
 
     methods = {
-      async onSubmitControl(){
+      async onSubmitControl(){ //无免并发处理，连续多次点击会进行多次提交
         await this.doSubmit();
       },
-      @noConcurrent
-      async onSubmitExp(){
+      @noConcurrent //免并发处理
+      async onSubmitExp(){ //有免并发处理，连续多次点击只会进行一次提交
         await this.doSubmit();
       },
     }
@@ -40,7 +40,7 @@
       let timestamp = new Date();
       let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
       this.submitHistory.push('提交 '+semanticTime);
-      await delay(600); //表单处理、提交到服务端、返回结果解析等造成的延时
+      await delay(1000); //模拟表单处理、提交到服务端、返回结果解析等造成的延时
     }
     components = {}
   }
