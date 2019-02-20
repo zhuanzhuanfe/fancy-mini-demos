@@ -1,22 +1,91 @@
 <template>
   <view>
-
+    <button @tap="onAction">请求<text class="sub">（{{groupType==='control' ? actionHintControl : actionHintExp}}）</text></button>
+    <view class="logs">
+      <view class="record" wx:for="{{logs}}" wx:for-item="record" wx:key="{{index}}">{{record}}</view>
+      <view class="clear" @tap="onClear" wx:if="{{logs.length>0}}">clear</view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import {noConcurrent,mergingStep,singleAisle,makeMutex} from 'fancy-mini/lib/decorator/noConcurrent';
+  import {semanticTimestamp} from '@/lib/utils';
+  import {delay} from 'fancy-mini/lib/operationKit';
 
   export default class extends wepy.component {
-    props = {}
+    props = {
+      groupType: {
+        type: String,
+      }
+    }
 
-    data = {}
+    data = {
+      actionHintControl: '连续点击，重复执行',
+      actionHintExp: '公共步骤将合并执行',
+
+      clkCount: 0,
+      logs: [],
+    }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      async onAction(){
+        let funcName = ['funcA', 'funcB', 'funcC'][this.clkCount%3];
+        this[funcName]();
+        ++this.clkCount;
+      },
+      onClear(){
+        this.logs = [];
+        this.$apply();
+      }
+    }
 
-    components = {}
+    printLog(...msgs){
+      this.logs.push(semanticTimestamp()+' '+msgs.join(''));
+      this.$apply();
+    }
+
+    async funcA(){
+      this.printLog('[funcA] enter');
+      let loginRes = await (this.groupType==='control' ? this.loginControl() : this.loginExp());
+      this.printLog('[funcA] loginRes: ',loginRes);
+      await delay(600);
+      this.printLog('[funcA] exit');
+    }
+    async funcB(){
+      this.printLog('[funcB] enter');
+      let loginRes = await (this.groupType==='control' ? this.loginControl() : this.loginExp());
+      this.printLog('[funcB] loginRes: ', loginRes);
+      await delay(600);
+      this.printLog('[funcB] exit');
+    }
+    async funcC(){
+      this.printLog('[funcC] enter');
+      let loginRes = await (this.groupType==='control' ? this.loginControl() : this.loginExp());
+      this.printLog('[funcC] loginRes: ', loginRes);
+      await delay(600);
+      this.printLog('[funcC] exit');
+    }
+
+    async loginControl(){  //无免并发处理，连续多次调用会多次执行，造成性能浪费和可能的并发干扰
+      this.printLog('[login] enter');
+      await delay(1000);
+      this.printLog('[login] finished');
+      return 'success';
+    }
+    @mergingStep //免并发处理：合并
+    async loginExp(){ //有免并发处理，连续多次调用只会执行一次，后续调用将会等待并使用该次执行结果，而不会重复执行，节约性能并避免并发执行相互干扰
+      this.printLog('[login] enter');
+      await delay(1000);
+      this.printLog('[login] finished');
+      return 'success';
+    }
+
+    components = {
+    }
   }
 </script>
 
@@ -24,5 +93,17 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-
+  .sub {
+    font-size: 22rpx;
+  }
+  .logs {
+    .record, .clear {
+      font-size: 28rpx;
+      line-height: 42rpx;
+      color: #969696;
+    }
+    .clear {
+      text-decoration: underline;
+    }
+  }
 </style>
