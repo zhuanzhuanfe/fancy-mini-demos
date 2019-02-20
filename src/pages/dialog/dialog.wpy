@@ -107,7 +107,7 @@
       share: ()=>{
         this.$invoke('DialogCommon','open',{
           title: '',
-          content: '分享给好友可以额外获得一次机会哦',
+          content: '独乐乐不如众乐乐',
           buttons: [{
             text: '取消',
             clickHandler: null,
@@ -173,7 +173,7 @@
 
     onShareAppMessage(){
       return {
-        title: '小程序代码库fancy-mini功能演示',
+        title: '小程序代码库fancy-mini',
         imageUrl: '',
         path: '/pages/index/index?channel=share',
       }
