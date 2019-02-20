@@ -1,7 +1,6 @@
 <template>
   <view>
-    <button @tap="onActionControl" wx:if="{{groupType==='control'}}">弹窗</button>
-    <button @tap="onActionExp" wx:if="{{groupType==='experimental'}}">弹窗</button>
+    <button @tap="onAction">弹窗<text class="sub">（{{groupType==='control' ? actionHintControl : actionHintExp}}）</text></button>
     <view class="submitHistory">
       <view class="record" wx:for="{{submitHistory}}" wx:for-item="record" wx:key="{{index}}">{{record}}</view>
     </view>
@@ -23,8 +22,10 @@
     }
 
     data = {
-      clkCountControl: 0,
-      clkCountExp: 0,
+      actionHintControl: '连续点击，弹窗覆盖',
+      actionHintExp: '连续点击，依次弹窗',
+
+      clkCount: 0,
       contents: [
         '恭喜获得奖励0',
         '恭喜获得奖励1',
@@ -36,39 +37,22 @@
     computed = {}
 
     methods = {
-      async onActionControl(){
+      async onAction(){
         //打印点击日志
-        let contentIdx = this.clkCountControl%this.contents.length;
+        let contentIdx = this.clkCount%this.contents.length;
         let content = this.contents[contentIdx];
-        ++this.clkCountControl;
+        ++this.clkCount;
 
         let timestamp = new Date();
         let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
-        this.submitHistory.push(semanticTime+' 文案'+contentIdx);
+        this.submitHistory.push(semanticTime+' 奖励'+contentIdx);
         this.$apply();
 
         //延迟一段时间再弹窗，使用户可以在弹窗出现前进行多次点击，便于触发并发现象
         await delay(500);
 
         //进行弹窗
-        this.popDialogControl(content);
-      },
-      async onActionExp(){
-        //打印点击日志
-        let contentIdx = this.clkCountExp%this.contents.length;
-        let content = this.contents[contentIdx];
-        ++this.clkCountExp;
-
-        let timestamp = new Date();
-        let semanticTime = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getSeconds()}.${timestamp.getMilliseconds()}`;
-        this.submitHistory.push(semanticTime+' 文案'+contentIdx);
-        this.$apply();
-
-        //延迟一段时间再弹窗，使用户可以在弹窗出现前进行多次点击，便于触发并发现象
-        await delay(500);
-
-        //进行弹窗
-        this.popDialogExp(content);
+        this.groupType==='control' ? this.popDialogControl(content) : this.popDialogExp(content);
       },
     }
 
@@ -106,6 +90,9 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
+  .sub {
+    font-size: 22rpx;
+  }
   .submitHistory {
     .record {
       font-size: 28rpx;

@@ -1,7 +1,7 @@
 <template>
   <view>
-    <button @tap="onSubmitControl" wx:if="{{groupType==='control'}}">提交</button>
-    <button @tap="onSubmitExp" wx:if="{{groupType==='experimental'}}">提交</button>
+    <button @tap="onSubmitControl" wx:if="{{groupType==='control'}}">提交<text class="sub">（连续点击，重复提交）</text></button>
+    <button @tap="onSubmitExp" wx:if="{{groupType==='experimental'}}">提交<text class="sub">（连续点击，一次提交）</text></button>
     <view class="submitHistory">
       <view class="record" wx:for="{{submitHistory}}" wx:for-item="record" wx:key="{{index}}">{{record}}</view>
     </view>
@@ -50,6 +50,9 @@
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
+  .sub {
+    font-size: 22rpx;
+  }
   .submitHistory {
     .record {
       font-size: 28rpx;
