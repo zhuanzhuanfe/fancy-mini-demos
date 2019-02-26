@@ -1,6 +1,6 @@
 <template>
   <view>
-    <!--<view class="action" @tap="onCreate">获取测试二维码</view>  todo:支持生成二维码-->
+    <view class="action" @tap="onCreate">生成二维码</view>
 
     <QrCode :decodeParamsHandler.sync="decodeParamsHandler"></QrCode>
   </view>
@@ -9,6 +9,7 @@
 <script>
   import wepy from 'wepy';
   import QrCode from '@/components/fancy-mini/QrCode';
+  import qs from 'querystring';
 
   export default class extends wepy.page {
     config = {
@@ -44,15 +45,15 @@
         };
       }
 
-      let decodeRes = await wx.cloud.callFunction({ //todo: 支持生成二维码、支持参数解码
+      let decodeRes = (await wx.cloud.callFunction({
         name: 'decodeQrParams',
         data: {
           scene
         }
-      });
+      })).result;
       console.log('decodeRes:', decodeRes);
 
-      if (decodeRes.respCode != 0){
+      if (decodeRes.code != 0){
         return {
           code: -2,
           errMsg: "[decodeParams failed] api failed"
@@ -62,7 +63,7 @@
       return {
         code: 0,
         errMsg: "ok",
-        params: decodeRes.respData.params,
+        params: qs.parse(decodeRes.paramsStr),
       };
     }
 

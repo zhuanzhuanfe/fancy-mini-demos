@@ -7,6 +7,7 @@
 <script>
   import wepy from 'wepy';
   import CustomEntry from '@/components/fancy-mini/CustomEntry';
+  import {withErrToast, noConcurrent} from 'fancy-mini/lib/decorators';
 
   export default class extends wepy.page {
     config = {
@@ -28,10 +29,73 @@
     methods = {}
 
     createQrCodeHandler = async ({url})=>{
-      console.log('createQrCodeHandler, url:', url);
-      await this.$toast({
-        title: '该功能暂未支持'
+      return this.createQrCode({url});
+    }
+
+    @noConcurrent
+      @withErrToast({defaultMsg: '服务异常'})
+    async createQrCode({url}){
+      console.log('createQrCode, url:', url);
+      let [page, params] = url.split('?');
+      page = page[0]==='/' ? page.substring(1) : page;
+
+      let createRes = (await wx.cloud.callFunction({
+        name: 'createQrCode',
+        data: {
+          page,
+          params,
+          width: 400,
+          auto_color: false,
+          line_color: {
+            r: 0,
+            g: 0,
+            b: 0,
+          },
+          is_hyaline: false,
+        }
+      })).result;
+
+      if (createRes.code !== 0){
+        console.error('[createQrCode] create failed:', createRes);
+        return '图片生成失败';
+      }
+
+      let base64Data = createRes.base64Data;
+      let base64Img = 'data:image/jpg;base64,'+base64Data;
+
+      let filePath = `${wx.env.USER_DATA_PATH}/qrCodeTempFile.jpg`;
+      let writeRes = await new Promise((resolve, reject)=>{
+        wx.getFileSystemManager().writeFile({
+          filePath,
+          data: base64Data,
+          encoding: 'base64',
+          success(res){
+            resolve(Object.assign({succeeded: true}, res));
+          },
+          fail(res){
+            resolve(Object.assign({succeeded: false}, res));
+          },
+        });
+      })
+
+      if (!writeRes.succeeded){
+        console.error('[createQrCode] writeFile failed:', writeRes);
+        return '图片写入失败';
+      }
+
+      let saveRes = await this.$wxResolve.saveImageToPhotosAlbum({
+        filePath,
       });
+      if (!saveRes.succeeded){
+        console.error('[createQrCode] saveImage failed:', saveRes);
+        return '图片保存失败';
+      }
+
+      await this.$toast({
+        title: '已保存至相册',
+        type: 'success',
+      });
+      return 'ok';
     };
 
     onLoad() {

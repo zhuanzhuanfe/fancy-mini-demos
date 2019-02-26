@@ -55,7 +55,7 @@ if (prod) {
       config: {
       }
     },
-    imagemin: {
+    /*imagemin: {
       filter: /\.(jpg|png|jpeg)$/,
       config: {
         jpg: {
@@ -65,6 +65,6 @@ if (prod) {
           quality: 80
         }
       }
-    }
+    }*/
   }
 }

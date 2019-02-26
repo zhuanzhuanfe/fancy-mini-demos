@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 2,
 			"list": [
 				{
 					"id": -1,
@@ -46,8 +46,14 @@
 				{
 					"id": 1,
 					"name": "temp",
-					"pathName": "pages/noConcurrent/noConcurrent",
+					"pathName": "pages/tools/customEntry",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "temp2",
+					"pathName": "pages/tools/qrCode",
 					"scene": null
 				}
 			]
