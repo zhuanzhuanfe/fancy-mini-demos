@@ -8,7 +8,7 @@ cloud.init();
 exports.main = async (event, context) => {
   let accessTokenRes = await cloud.callFunction({name: 'getAccessToken'});
 
-  event.params = event.params || '';
+  event.params = decodeURIComponent(event.params || '');
   
   const MAX_SCENE_WIDTH = 32;
   let scene = '_'+event.params;
