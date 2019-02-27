@@ -4,7 +4,7 @@
     <view class="actions">
       <button class="action" @tap="onProjectLink">链接</button>
       <button class="action" open-type="share">分享</button>
-      <!--<button class="action" @tap="onDebug">console</button>-->
+      <button class="action" @tap="onDebug">console</button>
     </view>
   </view>
 

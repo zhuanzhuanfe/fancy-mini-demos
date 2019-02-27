@@ -5,7 +5,9 @@
 
 
 ## 访问
-暂未发布为独立小程序，请下载源码自行编译、运行。
+- 小程序名称：fancyDemos
+- 二维码：  
+![](./docs/images/fancyQrCode.jpg)
 
 ## 安装
 - 下载 [项目代码]()
@@ -32,7 +34,7 @@
       # npm run build #适合上线：开启压缩&各种检查优化
     ```
 
-- 新建项目   
+- 新建项目  
   微信开发者工具 - 项目 - 新建项目
     - 项目目录：选择fancy-mini-demos根目录
     - AppID： 填写开发者自己的小程序AppID
@@ -58,3 +60,6 @@
 - [es6语法](http://es6.ruanyifeng.com/#docs/reference)
 - [less语法](http://lesscss.org/)
 - 转转小程序代码库：[fancy-mini](https://github.com/zhuanzhuanfe/fancy-mini)
+
+## TODO
+- 补全demo
