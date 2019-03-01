@@ -1,0 +1,60 @@
+<template>
+  <view>
+    <view class="brands">
+      <view class="brand" wx:for="{{brands}}" wx:for-item="brand" wx:key="id" @tap="onBrand({{index}})">{{brand.name}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import routeParams from 'fancy-mini/lib/routeParams';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '选择品牌',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      brands: [
+        {"name":"苹果","id":0},{"name":"小米","id":1},{"name":"华为","id":2},{"name":"OPPO","id":3},{"name":"vivo","id":4},{"name":"三星","id":5},{"name":"魅族","id":6},{"name":"手机配件","id":7},{"name":"诺基亚","id":8},{"name":"锤子","id":9},{"name":"一加","id":10},{"name":"HTC","id":11},{"name":"美图","id":12},{"name":"努比亚","id":13},{"name":"乐视","id":14},{"name":"联想","id":15},{"name":"酷派","id":16},{"name":"中兴","id":17},{"name":"摩托罗拉","id":18},{"name":"LG","id":19},{"name":"金立","id":20},{"name":"黑莓","id":21},{"name":"其他手机品牌","id":22},{"name":"索尼","id":23}
+      ],
+    }
+
+    computed = {}
+
+    methods = {
+      onBrand(idx){
+        let brand = this.brands[idx];
+
+        routeParams.setBackFromData({ //后一页面向前一页面传参
+          brandName: brand.name,
+          brandId: brand.id,
+        });
+
+        wx.navigateBack();
+      }
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .brand {
+    font-size:30rpx;
+    color:#5c5c5c;
+    line-height: 90rpx;
+    border-bottom: solid 1px #e7e7e7;
+  }
+</style>

@@ -19,7 +19,7 @@ module.exports = {
   },
   // add your custom rules here
   'rules': {
-    'fancy-mini/navigate-wxapi': 'error', //配置自定义规则的警告级别：'error', 'warn',  'off'
-    'fancy-mini/navigate-onunload': 'error',
+    'fancy-mini/navigate-wxapi': 'off', //配置自定义规则的警告级别：'error', 'warn',  'off'
+    'fancy-mini/navigate-onunload': 'off',
   }
 }

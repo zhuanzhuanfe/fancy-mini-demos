@@ -1,0 +1,82 @@
+<template>
+  <view>
+    <view class="intro">接收到表单数据：</view>
+    <view class="info">{{formDataStr}}</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import routeParams from 'fancy-mini/lib/routeParams';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '发布',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      formData: {},
+    }
+
+    computed = {
+      formDataStr(){
+        return JSON.stringify(this.formData, null, 4);
+      }
+    }
+
+    methods = {}
+
+    onLoad() {
+      this.rcvCrossPageFields({flow: 'forward'}); //接收 打开时，前一页面传递过来的数据
+    }
+
+    onShow(){
+
+    }
+
+    /**
+     * 接收跨页面交互数据
+     * @param {string} flow 交互方式：
+     *        forward-正向，如 首页，点击卖手机->选择机型页->发布页（发布页从前一页面接收机型数据）
+     *        backward-逆向，如 发布页，点击选择机型->选择机型页->返回发布页（发布页从后一页面接收机型数据）
+     */
+    rcvCrossPageFields({flow}){
+      let route = flow==='forward' ? routeParams.getOpenFromRoute() : routeParams.getBackFromRoute();
+      let data = flow==='forward' ? routeParams.getOpenFromData() : routeParams.getBackFromData();
+      if (!data)  //若用户直接返回，而不是操作完毕后返回，则不作处理
+        return;
+
+      switch (route){
+        case "pages/routeParams/index": //估价页
+          Object.assign(this.formData, data);
+          this.$apply();
+          break;
+        default:
+      }
+      this.$apply();
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .intro {
+    line-height: 102rpx;
+    font-size: 30rpx;
+    color: #43474C;
+  }
+  .info {
+    font-size: 30rpx;
+    color: #AAAEB9;
+    line-height: 42rpx;
+    white-space: pre-wrap;
+  }
+</style>

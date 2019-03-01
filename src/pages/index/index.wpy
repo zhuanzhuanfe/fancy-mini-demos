@@ -65,6 +65,11 @@
               desc: '在开发版/体验版打开二维码；查看二维码编码信息',
               href: '/pages/tools/qrCode'
             },
+            {
+              title: '跨页面传参',
+              desc: '后一页面向前一页面传参；前一页面向后一页面传递（大量）数据',
+              href: '/pages/routeParams/index'
+            },
           ]
         },
         {

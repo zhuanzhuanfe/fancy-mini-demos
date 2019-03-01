@@ -1,0 +1,60 @@
+<template>
+  <view>
+    <view class="cities">
+      <view class="city" wx:for="{{cities}}" wx:for-item="city" wx:key="id" @tap="onCity({{index}})">{{city.name}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import routeParams from 'fancy-mini/lib/routeParams';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '选择地区',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      cities: [
+        {"name":"阿拉善盟","id":0},{"name":"鞍山","id":1},{"name":"安庆","id":2},{"name":"安阳","id":3},{"name":"阿坝","id":4},{"name":"安顺","id":5},{"name":"阿里","id":6},{"name":"安康","id":7},{"name":"阿拉尔","id":8},{"name":"阿勒泰","id":9},{"name":"阿克苏","id":10},{"name":"澳门","id":11},{"name":"北京","id":12},{"name":"保定","id":13},{"name":"包头","id":14},{"name":"巴彦淖尔市","id":15},{"name":"本溪","id":16},{"name":"白城","id":17},{"name":"白山","id":18},{"name":"蚌埠","id":19},{"name":"亳州","id":20},{"name":"滨州","id":21},{"name":"百色","id":22},{"name":"北海","id":23},{"name":"白沙黎族自治县","id":24},{"name":"保亭","id":25},{"name":"巴中","id":26},{"name":"毕节","id":27},{"name":"保山","id":28},{"name":"宝鸡","id":29},{"name":"白银","id":30},{"name":"北屯市","id":31},{"name":"巴音郭楞","id":32},{"name":"博尔塔拉","id":33}
+        ],
+    }
+
+    computed = {}
+
+    methods = {
+      onCity(idx){
+        let city = this.cities[idx];
+
+        routeParams.setBackFromData({ //后一页面向前一页面传参
+          cityName: city.name,
+          cityId: city.id,
+        });
+
+        wx.navigateBack();
+      }
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .city {
+    font-size:30rpx;
+    color:#5c5c5c;
+    line-height: 90rpx;
+    border-bottom: solid 1px #e7e7e7;
+  }
+</style>

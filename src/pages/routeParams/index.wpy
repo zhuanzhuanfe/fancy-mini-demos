@@ -1,0 +1,162 @@
+<template>
+  <view>
+    <view class="intro">后一页面向前一页面传参：</view>
+    <view class="fields">
+      <view  class="field" @tap.stop="onBrand">
+        <view class="title">品牌</view>
+        <view class="value {{brand.value ? '' : 'holder'}}">{{brand.value  || '选择品牌'}}</view>
+        <view class="hint"></view>
+      </view>
+      <view  class="field" @tap.stop="onCity">
+        <view class="title">地区</view>
+        <view class="value {{city.value ? '' : 'holder'}}">{{city.value  || '选择地区'}}</view>
+        <view class="hint"></view>
+      </view>
+    </view>
+    <view class="intro">前一页面向后一页面传递（大量）数据：</view>
+    <button class="sell" @tap="onSell">卖掉换钱</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import routeParams from 'fancy-mini/lib/routeParams';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '跨页面传参',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      brand: {
+        value: '',
+        brandId: '',
+      },
+      city: {
+        value: '',
+        cityId: '',
+      },
+    }
+
+    computed = {}
+
+    methods = {
+      onBrand(){
+        wx.navigateTo({
+          url: '/pages/routeParams/brands'
+        });
+      },
+      onCity(){
+        wx.navigateTo({
+          url: '/pages/routeParams/cities'
+        });
+      },
+      onSell(){
+        routeParams.setOpenFromData({ //前一页面向后一页面传参
+          brand: this.brand,
+          city: this.city,
+        });
+
+        wx.navigateTo({
+          url: '/pages/routeParams/post'
+        });
+      },
+    }
+
+    onLoad() {
+    }
+
+    onShow(){
+      this.rcvCrossPageFields({flow: 'backward'}); //接收 返回时，后一页面传递回来的数据
+    }
+
+    /**
+     * 接收跨页面交互数据
+     * @param {string} flow 交互方式：
+     *        forward-正向，如 首页，点击卖手机->选择机型页->发布页（发布页从前一页面接收机型数据）
+     *        backward-逆向，如 发布页，点击选择机型->选择机型页->返回发布页（发布页从后一页面接收机型数据）
+     */
+    rcvCrossPageFields({flow}){
+      let route = flow==='forward' ? routeParams.getOpenFromRoute() : routeParams.getBackFromRoute();
+      let data = flow==='forward' ? routeParams.getOpenFromData() : routeParams.getBackFromData();
+      if (!data) //若用户直接返回，而不是操作完毕后返回，则不作处理
+        return;
+
+      switch (route){
+        case "pages/routeParams/brands": //选择品牌
+          Object.assign(this.brand, {
+            value: data.brandName,
+            brandId: data.brandId,
+          });
+          break;
+        case "pages/routeParams/cities": //选择地区
+          Object.assign(this.city, {
+            value: data.cityName,
+            cityId: data.cityId,
+          });
+          break;
+        default:
+      }
+      this.$apply();
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  @import "../../../node_modules/fancy-mini/lib-style/common";
+  .intro {
+    line-height: 102rpx;
+    font-size: 30rpx;
+    color: #43474C;
+  }
+  .fields {
+    background-color: #ffffff;
+    padding: 0 30rpx;
+    .field {
+      overflow: hidden;
+      position: relative;
+      &:not(:first-child){
+        .border-bottom(solid; #e7e7e7);
+      }
+      .title {
+        float: left;
+        width: 154rpx;
+        height: 102rpx;
+        line-height: 102rpx;
+        font-size: 30rpx;
+        color: #43474C;
+      }
+      .value {
+        float: left;
+        width: 500rpx;
+        height: 100%;
+        line-height: 102rpx;
+        font-size: 30rpx;
+        color: #43474c;
+        text-align: right;
+        &.holder {
+          color: #AAAEB9;
+        }
+      }
+      .hint {
+        float: right;
+        width: 12rpx;
+        height: 22rpx;
+        background-image: url(https://img1.zhuanstatic.com/open/zhuanzhuan/publicComponent/images/post.png);
+        background-size: 80rpx 89rpx;
+        background-position: -48rpx 0;
+        margin-top: 40rpx;
+      }
+    }
+  }
+
+</style>
