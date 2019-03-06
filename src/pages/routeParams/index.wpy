@@ -15,12 +15,15 @@
     </view>
     <view class="intro">前一页面向后一页面传递（大量）数据：</view>
     <button class="sell" @tap="onSell">卖掉换钱</button>
+
+    <Introduction :intros.sync="intros"></Introduction>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import routeParams from 'fancy-mini/lib/routeParams';
+  import Introduction from '@/components/Introduction';
 
   export default class extends wepy.page {
     config = {
@@ -31,7 +34,9 @@
       navigationBarTextStyle: 'black'
     }
 
-    components = {}
+    components = {
+      Introduction,
+    }
 
     data = {
       brand: {
@@ -42,6 +47,16 @@
         value: '',
         cityId: '',
       },
+
+      intros: [
+        {
+          title: '方案优点：',
+          content: `
+            纯内存操作，无需读写storage，性能相对优异
+            传参逻辑单独封装，对页面代码无侵入
+          `,
+        },
+      ],
     }
 
     computed = {}
