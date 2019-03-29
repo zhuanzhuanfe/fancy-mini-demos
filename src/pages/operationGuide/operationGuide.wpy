@@ -1,0 +1,74 @@
+<template>
+  <!--操作区-->
+  <view class="workspace">
+    <view class="signIn" @tap="onSignIn"></view> <!--签到-->
+    <Kettle></Kettle> <!--浇水-->
+    <TopBar></TopBar><!--提现-->
+  </view>
+
+  <!--介绍区-->
+  <view>
+
+  </view>
+
+  <!--弹窗蒙层及辅助工具-->
+  <DialogCommon></DialogCommon><!--通用弹窗-->
+  <Preloader></Preloader><!--图片预加载-->
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import TopBar from './components/TopBar';
+  import Kettle from './components/Kettle';
+  import DialogCommon from '../../components/fancy-mini/DialogCommon';
+  import Preloader from '@/components/Preloader';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#7bd6f0',
+      navigationBarTitleText: '新手引导',
+      navigationBarTextStyle: 'white'
+    }
+
+    components = {
+      TopBar,
+      Kettle,
+      DialogCommon,
+      Preloader,
+    }
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .workspace {
+    height: 1095rpx;
+    background:
+      url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/tree/stage3.png")  195rpx 300rpx ~"/" 328rpx 395rpx no-repeat, //树
+      url("https://pic2.zhuanstatic.com/zhuanzh/n_v286a1e55276874368845871543e09b207.png")  0 -40rpx ~"/" 100% 100% no-repeat, //背景
+    ;
+    position: relative;
+    .signIn {
+      position: absolute;
+      left:32rpx;
+      bottom: 147rpx;
+
+      width: 110rpx;
+      height: 110rpx;
+      background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/botBar/signIn.png") top / 100% 100% no-repeat;
+    }
+  }
+</style>

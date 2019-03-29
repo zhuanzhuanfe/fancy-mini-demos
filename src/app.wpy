@@ -17,12 +17,12 @@ export default class extends wepy.app {
       'pages/navigate/pageC', //页面跳转演示
       'pages/curtain/curtain', //层级中转页面，避免自定义返回行为时出现原生上一层级内容一闪而过的现象
 
+      //独立演示页
       'pages/toast/toast',  //toast功能演示
-      'pages/dialog/dialog', //弹窗功能演示
-      'pages/dialog/userRules', //弹窗功能演示-用户使用协议
       'pages/tools/customEntry', //入口构造工具
       'pages/tools/qrCode', //二维码测试工具
       'pages/noConcurrent/noConcurrent', //免并发修饰器
+      'pages/operationGuide/operationGuide', //新手引导
 
       //跨页面传参
       'pages/routeParams/index', //主界面
@@ -30,6 +30,9 @@ export default class extends wepy.app {
       'pages/routeParams/cities', //选择地区
       'pages/routeParams/post',   //卖掉换钱
 
+      //通用弹窗
+      'pages/dialog/dialog', //弹窗功能演示
+      'pages/dialog/userRules', //弹窗功能演示-用户使用协议
     ],
     window: {
       backgroundTextStyle: 'light',

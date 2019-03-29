@@ -1,0 +1,141 @@
+<template>
+  <view class="topBar" style="{{withdrawGuideStyle}}" id="withdrawArea">
+    <view class="info">
+      <image class="avatar" src="{{avatar}}" mode="aspectFill"></image>
+      <view class="goldNum">{{money}}</view>
+      <view class="goldIcon" id="coinHome"></view>
+    </view>
+    <view class="withdraw" @tap="onWithdraw">去提现</view>
+  </view>
+</template>
+<style lang="less" scoped>
+  @import "../../../../node_modules/fancy-mini/lib-style/common";
+  .topBar {
+    position: absolute;
+    top: 16rpx;
+    left: 0;
+    display: flex;
+    align-items: center;
+
+    .info {
+      box-sizing: border-box;
+      height: 56rpx;
+      padding: 0 10rpx;
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+      border-radius: 0 28rpx 28rpx 0;
+      margin: 0 24rpx 0 0;
+      .avatar {
+        width: 40rpx;
+        height: 40rpx;
+        background: #c9c9c9;
+        border: solid 2rpx #fff;
+        border-radius: 50%;
+        margin-right: 10rpx;
+      }
+      .goldNum, .nickname {
+        font-size: 28rpx;
+        color: #fff;
+        font-weight: 600;
+        line-height: 40rpx;
+        margin-right: 6rpx;
+      }
+      .nickname {
+        max-width: 300rpx;
+        .ellipsisLine();
+      }
+      .goldIcon {
+        width: 36rpx;
+        height: 36rpx;
+        background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/topBar/coin.png") top / 100% 100% no-repeat;
+        margin-right: 4rpx;
+      }
+    }
+    .withdraw {
+      height: 56rpx;
+      line-height: 56rpx;
+      padding: 0 28rpx;
+      background: linear-gradient(180deg, #ffe539 0%, #ffcd1a 100%) top / 100% 100% no-repeat;
+      border-radius: 26rpx;
+      font-size: 28rpx;
+      color: #b5740c;
+      font-weight: 600;
+    }
+  }
+</style>
+<script>
+  import wepy from 'wepy';
+  import {noConcurrent, withErrToast, errSafe} from 'fancy-mini/lib/decorators';
+  // import {operationGuideAction} from '../../../components/common/operationGuide/operationGuide';
+
+  export default class extends wepy.component {
+    data = {
+      withdrawGuideStyle: '',
+
+      avatar: 'https://pic4.58cdn.com.cn/zhuanzh/n_v1bl2lwwii6wsfqwzb7iaq.jpg?w=69&h=69',
+      userName: 'fancyDemos',
+      money: '100',
+    }
+    methods = {
+      //提现
+      // @operationGuideAction({eleId: 'withdrawArea'}) //新手引导
+      @noConcurrent
+        @withErrToast({defaultMsg: '服务异常'})
+      async onWithdraw(){
+        let confirmRes = await this.$root.$invoke('DialogCommon', 'asyncOpen', {
+          title: '',
+          content: `确认提现${this.money}金币为${this.money/1000}元现金？`,
+          buttons: [{
+            text: '确定',
+            clickHandler(){
+              return {confirm: true};
+            },
+          }],
+        });
+
+        if (!confirmRes.confirm)
+          return 'ok';
+
+        await this.$toast({
+          title: '提现成功',
+          type: 'success',
+        });
+
+        return 'ok';
+      },
+    }
+
+    //展示新手引导
+    async showOperationGuide(){
+      await this.$root.$invoke('OperationGuideModal', 'open', {
+        eleId: 'withdrawArea',
+        eleStyleRenderer: (style)=>{
+          this.withdrawGuideStyle = style;
+          this.$apply();
+        },
+        highlightArea: {
+          extend: 8,
+          borderRadius: '0 36rpx 36rpx 0',
+        },
+
+        guideUI: 'hand',
+        tip: {
+          show: true,
+          text: '金币可提现，戳一戳变钱',
+          top: 215,
+          left: 176,
+          pointTo: 'topLeft',
+        },
+        pointer: {
+          show: true,
+          pointTo: 'top',
+          top: 89,
+          left: 252,
+        }
+      });
+      return true;
+    }
+
+  }
+</script>

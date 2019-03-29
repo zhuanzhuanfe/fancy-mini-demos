@@ -1,0 +1,269 @@
+<template>
+  <view @tap="onKettle" class="container"  id="kettleGuideArea" style="{{kettleGuideStyle}}">
+    <view class="base {{kettleAnimating ? 'kettleLeaving' : ''}}"><!--水壶基座-->
+      <view class="kettle {{watering ? '' : 'shaking'}}" style="{{kettleAnimateStyle}}" id="kettle"></view><!--水壶-->
+    </view>
+    <view class="title">{{drops}}水滴</view>
+    <image src="{{dropsGif}}" wx:if="{{animatingDrops}}" class="drops" style="{{dropsAnimateStyle}}"></image> <!--洒出来的水花-->
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {delay, queryRect} from 'fancy-mini/lib/operationKit';
+  import {noConcurrent, errSafe} from 'fancy-mini/lib/decorators';
+  // import {operationGuideAction} from '../../../components/common/operationGuide/operationGuide';
+
+  export default class extends wepy.component {
+    components = {}
+
+    data = {
+      drops: 100,
+      pxPerRpx: 0.5,
+
+      watering: false, //是否正在浇水
+      kettleGuideStyle: '', //新手引导附加样式
+
+      kettleAnimating: false,
+      kettleAnimateStyle: '',
+      kettleHomePos: { //水壶原始位置，单位：rpx
+        top: -1,
+        left: -1,
+      },
+
+      animatingDrops: false,
+      dropsGif: 'https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/tree/water.gif',
+      dropsAnimateStyle: '',
+    }
+
+    computed = {}
+
+    methods = {
+      // @operationGuideAction({eleId: 'kettleGuideArea'})
+      async onKettle(){
+        this.watering = true;
+        this.$apply();
+
+        await delay(100); //调接口等造成的延迟
+        await this.playWateringAnimation();//浇水动效
+
+        this.watering = false;
+        this.$apply();
+      }
+    }
+
+    //播放浇水动效
+    async playWateringAnimation(){
+      this.kettleAnimating = true;
+      this.$apply();
+
+      let treeRect = {top: 300};
+
+      let kettleTargetPos = {
+        top: treeRect.top - 110,
+        left: 375 + 17
+      };
+
+      await this.animateMoveKettle({ //移动水壶
+        top: kettleTargetPos.top,
+        left: kettleTargetPos.left,
+        rotateDeg: -30,
+        duration: 600,
+      });
+      await this.animateWatering({ //洒水
+        kettleTargetPos,
+        duration: 800,
+      });
+      await this.animateMoveBack({ //水壶归位
+        duration: 600
+      });
+
+      this.kettleAnimating = false;
+      this.$apply();
+    }
+
+    /**
+     * 动效：移动水壶
+     * @param {number} top  目标位置top值，相对于屏幕，单位：rpx
+     * @param {number} left 目标位置left值，相对于屏幕，单位：rpx
+     * @param {number} rotateDeg 旋转，单位：deg
+     * @param {number} duration 时长，单位：ms
+     */
+    async animateMoveKettle({top, left, rotateDeg, duration}){
+      if (!wx.createSelectorQuery)
+        return;
+
+      if (this.kettleHomePos.top < 0) {
+        let homeRect = await queryRect(`#kettle`);
+        this.kettleHomePos = {
+          top: homeRect.top/this.pxPerRpx,
+          left: homeRect.left/this.pxPerRpx,
+        };
+      }
+
+      this.kettleAnimateStyle = `
+        transition: all ${duration}ms linear;
+        transform: translate3d(${left-this.kettleHomePos.left}rpx, ${top-this.kettleHomePos.top}rpx, 0) rotate(${rotateDeg}deg);
+       `;
+      this.$apply();
+      await delay(duration);
+    }
+
+    /**
+     * 动效：水壶归位
+     * @param {number} duration 时长，单位：ms
+     */
+    async animateMoveBack({duration}){
+      if (!wx.createSelectorQuery)
+        return;
+
+      this.kettleAnimateStyle = `
+        transition: all ${duration}ms linear;
+        transform: translate3d(0, 0, 0) rotate(0);
+        `;
+      this.$apply();
+      await delay(duration);
+    }
+
+    /**
+     * 动效：洒水过程
+     * @param {object} kettleTargetPos 水壶目标位置，相对于屏幕，单位：rpx
+     * @param {number} kettleTargetPos.top
+     * @param {number} kettleTargetPos.left
+     * @param {number} duration 时长，单位：ms
+     */
+    async animateWatering({kettleTargetPos, duration}){
+      await this.$root.$invoke('Preloader', 'preloadImg', this.dropsGif);
+      this.dropsAnimateStyle = `
+        position: fixed;
+        top: ${kettleTargetPos.top + 60}rpx;
+        left: ${kettleTargetPos.left - 60}rpx;
+      `;
+      this.animatingDrops = true;
+      this.$apply();
+      await delay(duration);
+      this.animatingDrops = false;
+      this.$apply();
+    }
+
+    //展示新手引导（供外部调用）
+    async showOperationGuide(){
+      await this.$root.$invoke('OperationGuideModal', 'open', {
+        eleId: 'kettleGuideArea',
+        eleStyleRenderer: (style)=>{
+          this.kettleGuideStyle = style;
+          this.$apply();
+        },
+        highlightArea: {
+          extend: 20,
+          borderRadius: '50%',
+        },
+
+        guideUI: 'hand',
+        tip: {
+          show: true,
+          text: '多浇水长成摇钱树，\n获取更多金币',
+          top: -81,
+          right: 186,
+          pointTo: 'bottomRight',
+        },
+        pointer: {
+          show: true,
+          pointTo: 'right',
+          right: 231,
+          top: 60,
+        }
+      });
+      return true;
+    }
+
+    onLoad(){
+      wx.getSystemInfo({
+        success:(sysInfo)=>{
+          this.pxPerRpx = sysInfo.windowWidth/750;
+        }
+      });
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  @import "../../../../node_modules/fancy-mini/lib-style/common";
+
+  @kettleShakeDegree: 25deg;
+  @keyframes kettleShake {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    20% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    40% {
+      transform: translate3d(0, 0, 0) rotate(-@kettleShakeDegree);
+    }
+    60% {
+      transform: translate3d(0, 0, 0) rotate(@kettleShakeDegree);
+    }
+    80% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+  }
+
+  .container {
+    width:138rpx;
+    height:141rpx;
+    position: absolute;
+    bottom: 147rpx;
+    right:28rpx;
+    .base {
+      width: 100%;
+      height: 100%;
+      background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/widgets/kettleBase.png") center 10rpx ~"/" 100% 117rpx no-repeat;
+      position: relative;
+      &.kettleLeaving {
+        height: 143rpx;
+        background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/widgets/kettleBaseLeaving.png") center top / 100% 128rpx no-repeat;
+      }
+      .kettle {
+        width: 125rpx;
+        height: 105rpx;
+        background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree/widgets/kettle.png") top / 100% 100% no-repeat;
+        position: absolute;
+        top:0;
+        right: 10rpx;
+        &.shaking {
+          background-image: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/widgets/kettle.png"); //水壶旁带溢出的水滴
+          animation: kettleShake 4s infinite linear;
+        }
+      }
+    }
+    .title {
+      position: absolute;
+      bottom: 0;
+      left: 3rpx;
+
+      width: 131rpx;
+      height: 40rpx;
+      line-height: 40rpx;
+      box-shadow: inset 0 -4rpx 5rpx 0 rgba(96, 96, 96, 0.26);
+      border-radius: 19rpx;
+      border: 3rpx solid #2982cb;
+      background: #40a5f9;
+
+      font-weight: 500;
+      font-size: 24rpx;
+      color: #fff;
+      text-align: center;
+    }
+    .drops {
+      width: 89rpx;
+      height: 132rpx;
+    }
+  }
+</style>

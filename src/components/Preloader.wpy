@@ -1,0 +1,92 @@
+<template>
+  <view>
+    <image src="{{img}}" @load="onImgLoad" @error="onImgErr" wx:if="{{img}}" class="imgPreloader"></image>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {singleAisle} from 'fancy-mini/lib/decorator/noConcurrent';
+  
+  export default class extends wepy.component {
+    props = {}
+    
+    data = {
+      img: '',
+      imgLoadListener: null,
+      imgErrListener: null,
+    }
+
+    computed = {}
+
+    methods = {
+      onImgLoad(ev){
+        this.imgLoadListener && this.imgLoadListener(ev);
+      },
+      onImgErr(ev){
+        this.imgErrListener && this.imgErrListener(ev);
+      },
+    }
+
+    /**
+     * 预加载图片
+     * @param {string} src 图片url
+     * @return {Promise<Object>} 加载结果 {
+            succeeded: true, //是否成功加载
+            width: '10px', //成功时，图片宽度
+            height: '10px',//成功时，图片高度
+            errMsg: '', //失败时，错误信息
+          }
+     */
+    @singleAisle
+    async preloadImg(src){
+      //开始预加载，并获取加载结果
+      let res = await new Promise((resolve, reject)=>{
+        this.imgLoadListener = (ev)=>{
+          resolve({
+            succeeded: true,
+            width: ev.detail.width,
+            height: ev.detail.height,
+          });
+        };
+        this.imgErrListener = (ev)=>{
+          resolve({
+            succeeded: false,
+            errMsg: ev.detail.errMsg,
+          });
+        };
+        
+        this.img = src;
+        this.$apply();
+      });
+      
+      //预加载完毕，重置数据
+      this.imgLoadListener = null;
+      this.imgErrListener = null;
+      this.img = '';
+      this.$apply();
+      
+      //返回结果
+      return res;
+    }
+    onUnload(){
+      this.imgErrListener && this.imgErrListener({
+        detail: {
+          errMsg: 'page unloaded'
+        }
+      });
+    }
+    components = {}
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+  .imgPreloader {
+    position: fixed;
+    left: 760rpx;
+    top: 0;
+  }
+</style>

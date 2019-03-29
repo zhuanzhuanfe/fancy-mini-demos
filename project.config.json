@@ -46,7 +46,7 @@
 				{
 					"id": 1,
 					"name": "temp",
-					"pathName": "pages/routeParams/index",
+					"pathName": "pages/operationGuide/operationGuide",
 					"query": "",
 					"scene": null
 				},
