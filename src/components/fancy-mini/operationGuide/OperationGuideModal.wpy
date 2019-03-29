@@ -108,7 +108,7 @@ e.g.：
         eleId: '', //操作区域顶层元素
         eleStyleRenderer: null, //操作区域顶层元素需支持动态修改样式
         highlightArea: { //高亮区域
-          extend: "10 10 10 10", //操作区域四周额外高亮范围，最多接受四个值，依次为：上右下左
+          extend: "10 10 10 10", //操作区域四周额外高亮范围，最多接受四个值，依次为：上右下左，单位：rpx
           borderRadius: 0, //高亮区域边框圆角：number-应用于四个角 | string-同css，如"0 36rpx 36rpx 0"
         },
 
@@ -264,7 +264,7 @@ e.g.：
 
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
-  @import (reference)"../../lib-style/common";
+  @import (reference)"../../../../node_modules/fancy-mini/lib-style/common";
 
   @pointerMoveHalfDist: 10rpx;
   @keyframes pointLeft {

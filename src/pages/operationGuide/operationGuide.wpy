@@ -1,7 +1,7 @@
 <template>
   <!--操作区-->
   <view class="workspace">
-    <view class="signIn" @tap="onSignIn"></view> <!--签到-->
+    <view class="signIn" @tap="onSignIn" id="signIn" style="{{signInGuideStyle}}"></view> <!--签到-->
     <Kettle></Kettle> <!--浇水-->
     <TopBar></TopBar><!--提现-->
   </view>
@@ -14,6 +14,7 @@
   <!--弹窗蒙层及辅助工具-->
   <DialogCommon></DialogCommon><!--通用弹窗-->
   <Preloader></Preloader><!--图片预加载-->
+  <OperationGuideModal></OperationGuideModal><!--新手引导蒙层-->
 </template>
 
 <script>
@@ -22,6 +23,8 @@
   import Kettle from './components/Kettle';
   import DialogCommon from '../../components/fancy-mini/DialogCommon';
   import Preloader from '@/components/Preloader';
+  import OperationGuideModal from '@/components/fancy-mini/operationGuide/OperationGuideModal';
+  import {operationGuideAction} from '@/components/fancy-mini/operationGuide/operationGuide';
 
   export default class extends wepy.page {
     config = {
@@ -37,15 +40,70 @@
       Kettle,
       DialogCommon,
       Preloader,
+      OperationGuideModal,
     }
 
-    data = {}
+    data = {
+      signInGuideStyle: '',
+    }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      @operationGuideAction({eleId: 'signIn'})
+      async onSignIn(){
+        await this.$toast({
+          title: '签到成功',
+          type: 'success',
+        });
+      }
+    }
 
     onLoad() {
+      this.showOperationGuide();
+    }
+
+    //展示新手引导
+    async showOperationGuide(){
+      await this.showOperationGuideSignIn(); //签到引导
+      await this.$invoke('Kettle', 'showOperationGuide'); //浇水引导
+      await this.$invoke('TopBar', 'showOperationGuide'); //提现引导
+    }
+
+    //展示签到引导
+    async showOperationGuideSignIn(){
+      await this.$root.$invoke('OperationGuideModal', 'open', {
+        eleId: 'signIn', //操作区域顶层元素
+        eleStyleRenderer: (style)=>{ //操作区域顶层元素需支持动态修改样式
+          this.signInGuideStyle = style;
+          this.$apply();
+        },
+        highlightArea: { //高亮区域
+          extend: '7 9 7 9', //操作区域四周额外高亮范围，最多接受四个值，依次为：上右下左，单位：rpx
+          borderRadius: '50%' //高亮区域边框圆角：number-应用于四个角 | string-同css，如"0 36rpx 36rpx 0"
+        },
+
+        //引导版式
+        guideUI: 'hand',//版式：hand-小手指引 | bear-小熊指引
+
+        //引导文案
+        tip: {
+          show: true, //是否展示
+          text: '每天签到可获得水滴或\n金币，不要忘记哦~', //文案内容
+          top: -126,  //文案位置，文案框（不含小三角）相对于操作区域，单位：rpx
+          left: 100,
+          pointTo: 'bottomLeft',  //小三角指向哪个方向：topLeft、topRight, bottomLeft, bottomRight
+        },
+
+        //引导图标（手型指针）
+        pointer: {
+          show: true, //是否展示
+          pointTo: 'left', //指向哪个方向：left、right、top、bottom
+          top: 28, //图标位置，相对于操作区域定位
+          left: 149,
+        }
+      });
+      return true;
     }
   }
 </script>

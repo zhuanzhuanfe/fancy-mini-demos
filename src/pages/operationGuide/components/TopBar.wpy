@@ -67,7 +67,7 @@
 <script>
   import wepy from 'wepy';
   import {noConcurrent, withErrToast, errSafe} from 'fancy-mini/lib/decorators';
-  // import {operationGuideAction} from '../../../components/common/operationGuide/operationGuide';
+  import {operationGuideAction} from '@/components/fancy-mini/operationGuide/operationGuide';
 
   export default class extends wepy.component {
     data = {
@@ -79,7 +79,7 @@
     }
     methods = {
       //提现
-      // @operationGuideAction({eleId: 'withdrawArea'}) //新手引导
+      @operationGuideAction({eleId: 'withdrawArea'}) //新手引导
       @noConcurrent
         @withErrToast({defaultMsg: '服务异常'})
       async onWithdraw(){

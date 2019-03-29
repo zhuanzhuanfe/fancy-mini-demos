@@ -12,7 +12,7 @@
   import wepy from 'wepy';
   import {delay, queryRect} from 'fancy-mini/lib/operationKit';
   import {noConcurrent, errSafe} from 'fancy-mini/lib/decorators';
-  // import {operationGuideAction} from '../../../components/common/operationGuide/operationGuide';
+  import {operationGuideAction} from '@/components/fancy-mini/operationGuide/operationGuide';
 
   export default class extends wepy.component {
     components = {}
@@ -39,7 +39,7 @@
     computed = {}
 
     methods = {
-      // @operationGuideAction({eleId: 'kettleGuideArea'})
+      @operationGuideAction({eleId: 'kettleGuideArea'})
       async onKettle(){
         this.watering = true;
         this.$apply();
