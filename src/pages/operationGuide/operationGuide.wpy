@@ -7,8 +7,9 @@
   </view>
 
   <!--介绍区-->
-  <view>
-
+  <view class="guide">
+    <button class="restart" @tap="onRestart">重新开始引导</button>
+    <Introduction :intros.sync="intros" class="intros"></Introduction>
   </view>
 
   <!--弹窗蒙层及辅助工具-->
@@ -25,6 +26,9 @@
   import Preloader from '@/components/Preloader';
   import OperationGuideModal from '@/components/fancy-mini/operationGuide/OperationGuideModal';
   import {operationGuideAction} from '@/components/fancy-mini/operationGuide/operationGuide';
+  import Introduction from '@/components/Introduction';
+  import {noConcurrent} from 'fancy-mini/lib/decorator/noConcurrent';
+  import {delay} from 'fancy-mini/lib/operationKit';
 
   export default class extends wepy.page {
     config = {
@@ -41,10 +45,54 @@
       DialogCommon,
       Preloader,
       OperationGuideModal,
+      Introduction,
     }
 
     data = {
       signInGuideStyle: '',
+
+      intros: [
+        {
+          title: '方案特点：',
+          content: `
+          `,
+        },
+        {
+          title: '就地高亮',
+          content: `
+            引导蒙层中高亮区域即为页面中实际操作区域，因而不需要每个操作单独制作蒙层切图，也不用担心页面布局调整造成高亮区域与实际区域不符；
+          `,
+        },
+        {
+          title: '就地交互',
+          content: `
+            高亮区域可直接进行点击等交互，用户可以即时体验操作流程；
+          `,
+        },
+        {
+          title: '依次引导',
+          content: `
+            上一个操作交互完毕后才开始展现下一个引导，展示引导蒙层->响应用户点击->等待交互完毕->展示下一个引导蒙层->...，时序上相互独立，不会互相干扰；
+          `,
+        },
+        {
+          title: '公共逻辑抽离',
+          content: `
+            蒙层样式、高亮范围、时序控制等公共逻辑抽离为一个公共模块，高亮元素只需引入该模块并进行少量配置，而不必关注引导细节。
+          `,
+        },
+        {
+          title: '可配置项',
+          content: `
+            高亮区域扩展范围：高亮元素四周额外高亮范围，最多接受四个值，依次为：上右下左，单位：rpx
+            高亮区域边框圆角：number-应用于四个角 | string-同css border-radius，如"0 36rpx 36rpx 0"
+            引导版式：hand-小手指引 | bear-小熊指引
+            引导文案：是否展示、文案内容、文案位置（相对高亮元素定位）
+            引导图标：是否展示、图标指向、图标位置（相对高亮元素定位）
+            点击蒙层时响应方式：skip-关闭蒙层，结束引导 | persist-不响应，继续等待用户点击高亮区域
+          `,
+        },
+      ],
     }
 
     computed = {}
@@ -56,7 +104,14 @@
           title: '签到成功',
           type: 'success',
         });
-      }
+      },
+
+      @noConcurrent
+      async onRestart(){
+        wx.pageScrollTo({scrollTop: 0, duration: 0});
+        await delay(100); //等待返回顶部完成
+        await this.showOperationGuide();
+      },
     }
 
     onLoad() {
@@ -101,7 +156,9 @@
           pointTo: 'left', //指向哪个方向：left、right、top、bottom
           top: 28, //图标位置，相对于操作区域定位
           left: 149,
-        }
+        },
+
+        tapModalAction: 'persist', //点击蒙层时响应方式：skip-关闭蒙层，结束引导 | persist-不响应，继续等待用户点击高亮区域
       });
       return true;
     }
@@ -113,20 +170,30 @@
 </style>
 <style lang="less" rel="stylesheet/less" scoped>
   .workspace {
-    height: 1095rpx;
+    height: 982rpx;
     background:
       url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/tree/stage3.png")  195rpx 300rpx ~"/" 328rpx 395rpx no-repeat, //树
-      url("https://pic2.zhuanstatic.com/zhuanzh/n_v286a1e55276874368845871543e09b207.png")  0 -40rpx ~"/" 100% 100% no-repeat, //背景
+      url("https://pic2.zhuanstatic.com/zhuanzh/n_v286a1e55276874368845871543e09b207.png")  0 -40rpx ~"/" 100% 1095rpx no-repeat, //背景
     ;
     position: relative;
     .signIn {
       position: absolute;
       left:32rpx;
-      bottom: 147rpx;
+      bottom: 34rpx;
 
       width: 110rpx;
       height: 110rpx;
       background: url("https://img1.zhuanstatic.com/open/zhuanzhuan/zzwa/main/tree2/botBar/signIn.png") top / 100% 100% no-repeat;
+    }
+  }
+  .guide {
+    position: relative;
+    border-radius: 24rpx 24rpx 0 0;
+    overflow: hidden;
+    background: #eee;
+    margin: -14rpx 0 0;
+    .intros {
+      margin-top: 10rpx;
     }
   }
 </style>

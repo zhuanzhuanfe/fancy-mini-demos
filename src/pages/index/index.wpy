@@ -92,7 +92,7 @@
             },
             {
               title: '新手引导',
-              desc: '就地高亮、就地交互、依次操作、公共逻辑抽离',
+              desc: '就地高亮、就地交互、依次引导、公共逻辑抽离',
               href: '/pages/operationGuide/operationGuide',
             },
           ]

@@ -132,7 +132,9 @@
           pointTo: 'top',
           top: 89,
           left: 252,
-        }
+        },
+
+        tapModalAction: 'persist', //点击蒙层时响应方式：skip-关闭蒙层，结束引导 | persist-不响应，继续等待用户点击高亮区域
       });
       return true;
     }
