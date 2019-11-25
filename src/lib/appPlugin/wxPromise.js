@@ -1,6 +1,6 @@
 import {customWxPromisify} from 'fancy-mini/lib/wxPromise';
 import {registerToThis} from 'fancy-mini/lib/wepyKit';
-import Navigator from './navigate';
+import {Navigator} from './navigate';
 
 //wx接口Promise化
 let {wxPromise, wxResolve} = (function () {

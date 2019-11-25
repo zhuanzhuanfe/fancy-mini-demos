@@ -3,6 +3,7 @@ import FancyWechatAuth from "../demoExtend/login/auth/FancyWechatAuth";
 import LoginPlugin from "fancy-mini/lib/request/plugin/LoginPlugin";
 import Requester from "fancy-mini/lib/request/Requester";
 import Cookie from 'fancy-mini/lib/Cookie';
+import CookiePlugin from 'fancy-mini/lib/request/plugin/CookiePlugin';
 import {authEvents} from 'fancy-mini/lib/globalEvents';
 
 //实例创建

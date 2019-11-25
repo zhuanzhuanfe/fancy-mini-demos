@@ -17,6 +17,8 @@
 	"appid": "wx0c5b0ddc84a1c0b9",
 	"projectname": "fancyDemos",
 	"scripts": {},
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
