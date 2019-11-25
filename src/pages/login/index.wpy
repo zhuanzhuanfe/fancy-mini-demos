@@ -1,0 +1,45 @@
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: ' ',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {}
+
+    computed = {}
+
+    methods = {}
+
+    onLoad() {
+      let res = {
+        succeeded: false, //是否成功收集到了所需信息
+        errMsg: 'not supported yet', //（失败时）错误信息
+        authType: 'wechat', //（成功时）用户选择的登录方式
+        authData: { //（成功时）该登录方式所需的鉴权信息
+
+        }
+      }
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

@@ -2,9 +2,9 @@
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-import './appPlugin'
+import wepy from 'wepy';
+import 'wepy-async-function';
+import './lib/appPlugin';
 
 export default class extends wepy.app {
   config = {
