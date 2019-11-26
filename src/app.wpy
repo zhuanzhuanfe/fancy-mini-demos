@@ -11,6 +11,10 @@ export default class extends wepy.app {
     pages: [
       'pages/index/index',  //首页
 
+      //登录模块
+      'pages/loginTrigger/index', //演示页，触发登录功能
+      'pages/login/index', //登录页，完成授权交互
+
       //无限层级路由方案
       'pages/navigate/pageA', //页面跳转演示
       'pages/navigate/pageB', //页面跳转演示

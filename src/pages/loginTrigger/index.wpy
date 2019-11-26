@@ -1,0 +1,43 @@
+<template>
+  <view>
+    <button @tap="onLogin">登录</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import {loginCenter} from '@/lib/appPlugin';
+
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: ' ',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {}
+
+    computed = {}
+
+    methods = {
+      async onLogin(){
+        let loginRes = await loginCenter.login();
+        console.log('login finished, res:', loginRes);
+      }
+    }
+
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

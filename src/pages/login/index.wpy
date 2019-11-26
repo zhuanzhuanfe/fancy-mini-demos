@@ -1,37 +1,62 @@
 <template>
   <view>
-
+    <button open-type="getUserInfo" @getuserinfo="onGetUserInfo">立即登录</button>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import {authEvents} from 'fancy-mini/lib/globalEvents';
 
   export default class extends wepy.page {
     config = {
-      backgroundColor: '#fff',
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: ' ',
-      navigationBarTextStyle: 'black'
+      navigationBarTitleText: '登录',
     }
 
-    components = {}
+    data = {
+      isActiveUnload: false, //是否代码主动触发的页面卸载：true-代码主动退出 | false-被动退出（e.g.用户点击了系统返回按钮）
+    }
 
-    data = {}
+    methods = {
+      onGetUserInfo(ev){
+        //授权失败，留在当前界面，等待用户再次交互
+        if (!ev.detail.errMsg.includes('ok'))
+          return;
 
-    computed = {}
+        //授权成功
 
-    methods = {}
+        //通知登录模块交互结果
+        authEvents.notify({
+          eventType: 'userAuthFinish',
+          data: {
+            succeeded: true, //是否成功收集到了所需信息
+            errMsg: 'ok', //（失败时）错误信息
+            authType: 'wechat', //（成功时）用户选择的登录方式
+            authData: { //（成功时）该登录方式所需的鉴权信息
+              ...ev.detail
+            }
+          }
+        });
 
-    onLoad() {
-      let res = {
-        succeeded: false, //是否成功收集到了所需信息
-        errMsg: 'not supported yet', //（失败时）错误信息
-        authType: 'wechat', //（成功时）用户选择的登录方式
-        authData: { //（成功时）该登录方式所需的鉴权信息
+        //自动返回
+        this.isActiveUnload = true;
+        wx.navigateBack();
+      }
+    }
 
-        }
+    onUnload() {
+      //被动退出页面时，通知登录模块交互结果
+      if (!this.isActiveUnload) {
+        authEvents.notify({
+          eventType: 'userAuthFinish',
+          data: {
+            succeeded: false, //是否成功收集到了所需信息
+            errMsg: 'cancel', //（失败时）错误信息
+            authType: '', //（成功时）用户选择的登录方式
+            authData: { //（成功时）该登录方式所需的鉴权信息
+            }
+          }
+        });
       }
     }
   }
