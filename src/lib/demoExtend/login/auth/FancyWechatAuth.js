@@ -17,12 +17,11 @@ class FancyWechatAuth extends WechatAuth {
   async loginByWxAuth({wxLoginRes, authData, loginOptions, configOptions}) {
     //调用后端接口，根据微信授权信息获取登录结果
     let loginRes = await configOptions.requester.request({
-      url: 'https://xxx/wxAuthLogin', //todo：换成实际后端接口
+      url: 'https://cloud.function/wxAuthLogin',
       data: {
         code: wxLoginRes.code,
         encryptedData: authData.encryptedData,
         iv: authData.iv,
-        //...
       },
       method: "POST",
     });
@@ -35,7 +34,7 @@ class FancyWechatAuth extends WechatAuth {
     //      2.3 用户信息：昵称、头像、性别、地区等
     //  3. 根据上一步中获取的openId/unionId，查询用户表；若存在相关记录，则返回对应用户信息，登录成功；若不存在，则自动注册，并存储微信用户信息作为用户初始信息，存储微信用户标识作为关联标识备查，之后返回对应用户信息，登录成功。
 
-    //登录失败处理 todo: 根据接口实际格式进行字段调整
+    //登录失败处理
     if (loginRes.respCode != 0) {
       return {
         succeeded: false, //是否成功
@@ -44,12 +43,12 @@ class FancyWechatAuth extends WechatAuth {
       };
     }
 
-    //登录成功处理 todo: 根据接口实际格式进行字段调整
+    //登录成功处理
     let data = loginRes.respData;
     return {
       succeeded: true, //是否成功
       errMsg: 'ok', //错误信息
-      userInfo: { //用户信息 todo: 改为实际所需格式
+      userInfo: { //用户信息
         nickName: data.nickName, //昵称
         avatarUrl: data.avatarUrl, //头像
         gender: data.gender, //性别
@@ -73,10 +72,9 @@ class FancyWechatAuth extends WechatAuth {
    */
   async loginByWxSilent({wxLoginRes, loginOptions, configOptions}) {
     let loginRes = await configOptions.requester.request({
-      url: 'https://xxx/wxSilentLogin', //todo:换成实际后端接口
+      url: 'https://cloud.function/wxSilentLogin',
       data: {
         code: wxLoginRes.code,
-        //...
       },
       method: "POST",
     });
@@ -86,7 +84,7 @@ class FancyWechatAuth extends WechatAuth {
     //  2. 根据openId，查询用户表；若存在相关记录，则返回对应用户信息，登录成功；若不存在相关记录，则登录失败
     //     效果：老用户可以在无感知的情况下悄悄静默登录；新用户依然是要等到授权登录时拿到用户信息才进行注册和登录，但静默尝试用户无感知，不会产生打扰
 
-    //登录失败处理 todo:根据接口实际格式进行字段调整
+    //登录失败处理
     if (loginRes.respCode != 0) {
       return {
         succeeded: false, //是否成功
@@ -97,13 +95,13 @@ class FancyWechatAuth extends WechatAuth {
       };
     }
 
-    //登录成功处理 todo:根据接口实际格式进行字段调整
+    //登录成功处理
     let data = loginRes.respData;
 
     return {
       succeeded: true, //是否成功
       errMsg: 'ok', //错误信息
-      userInfo: { //用户信息 todo: 改为实际所需格式
+      userInfo: { //用户信息
         nickName: data.nickName, //昵称
         avatarUrl: data.avatarUrl, //头像
         gender: data.gender, //性别

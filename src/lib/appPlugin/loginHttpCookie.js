@@ -5,6 +5,7 @@ import Requester from "fancy-mini/lib/request/Requester";
 import Cookie from 'fancy-mini/lib/Cookie';
 import CookiePlugin from 'fancy-mini/lib/request/plugin/CookiePlugin';
 import {authEvents} from 'fancy-mini/lib/globalEvents';
+import CloudFuncPlugin from 'fancy-mini/lib/request/plugin/CloudFuncPlugin';
 
 //实例创建
 const loginCenter = new FancyLogin(); //登录中心
@@ -59,6 +60,8 @@ requester.config({
     new CookiePlugin({
       cookie,
     }),
+    //云函数插件，将云函数封装成http接口的形式使用
+    new CloudFuncPlugin(),
   ]
 });
 

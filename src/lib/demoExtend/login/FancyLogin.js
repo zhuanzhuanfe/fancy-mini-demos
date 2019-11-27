@@ -42,8 +42,8 @@ class FancyLogin extends BaseLogin{
   //清除登录态
   clearLogin(...args){
     super.clearLogin(...args);
-    cookie.set('uid', '');
-    cookie.set('sessionKey', '');
+    this.cookie.set('uid', '');
+    this.cookie.set('sessionKey', '');
   }
 
   //保存/更新用户信息
@@ -51,8 +51,15 @@ class FancyLogin extends BaseLogin{
     super._saveInfo(loginInfo);
 
     // 写入cookie
-    cookie.set('uid', loginInfo.userInfo.uid);
-    cookie.set('sessionKey', loginInfo.userInfo.sessionKey);
+    this.cookie.set('uid', loginInfo.userInfo.uid);
+    this.cookie.set('sessionKey', loginInfo.userInfo.sessionKey);
+  }
+
+  //保存/更新匿名信息
+  _saveAnonymousInfo(anonymousInfo){
+    super._saveAnonymousInfo(anonymousInfo);
+
+    anonymousInfo.token && this.cookie.set('token', anonymousInfo.token);
   }
 }
 
