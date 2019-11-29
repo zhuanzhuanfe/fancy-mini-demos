@@ -6,6 +6,7 @@ import Cookie from 'fancy-mini/lib/Cookie';
 import CookiePlugin from 'fancy-mini/lib/request/plugin/CookiePlugin';
 import {authEvents} from 'fancy-mini/lib/globalEvents';
 import CloudFuncPlugin from 'fancy-mini/lib/request/plugin/CloudFuncPlugin';
+import {getCurWepyPage} from 'fancy-mini/lib/wepyKit';
 
 //实例创建
 const loginCenter = new FancyLogin(); //登录中心
@@ -35,6 +36,10 @@ loginCenter.config({
 
     //返回交互结果
     return userAuthRes;
+  },
+  pageConfigHandler(){ //获取页面级登录配置
+    let curPage = getCurWepyPage() || {}; //获取当前页面实例
+    return curPage.$loginOpts; //返回当前页面的自定义配置参数
   },
 
   //自定义参数

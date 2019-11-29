@@ -30,6 +30,12 @@
       }
     }
 
+    $loginOpts = {
+      onNewlyLogin: (...args)=>{
+        console.log('[page] onNewlyLogin, args:', ...args);
+      }
+    }
+
     onLoad() {
     }
   }
