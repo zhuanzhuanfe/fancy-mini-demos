@@ -6,7 +6,7 @@ import Cookie from 'fancy-mini/lib/Cookie';
 import CookiePlugin from 'fancy-mini/lib/request/plugin/CookiePlugin';
 import {authEvents} from 'fancy-mini/lib/globalEvents';
 import CloudFuncPlugin from 'fancy-mini/lib/request/plugin/CloudFuncPlugin';
-import {getCurWepyPage} from 'fancy-mini/lib/wepyKit';
+import {getCurWepyPage, registerToThis} from 'fancy-mini/lib/wepyKit';
 
 //实例创建
 const loginCenter = new FancyLogin(); //登录中心
@@ -69,6 +69,32 @@ requester.config({
     new CloudFuncPlugin(),
   ]
 });
+
+//将登录模块相关功能注册到this上，方便页面/组件直接使用
+const propMapThis2Login = { //命名映射，key为this属性名，value为loginCenter属性名, '*this'表示loginCenter自身
+  '$loginCenter': '*this', // this.$loginCenter 对应 loginCenter
+  '$login': 'login', // this.$login() 对应 loginCenter.login()
+  '$logout': 'logout',
+  '$reLogin': 'reLogin',
+  '$checkLogin': 'checkLogin',
+};
+
+for (let [thisProp, loginProp] of Object.entries(propMapThis2Login)) {
+  let loginTarget = loginProp === '*this' ? loginCenter : loginCenter.makeAssignableMethod(loginProp);
+  registerToThis(thisProp, loginTarget);
+}
+
+//将请求模块相关功能注册到this上，方便页面/组件直接使用
+const propMapThis2Requester = { //命名映射，key为this属性名，value为requester属性名, '*this'表示requester自身
+  '$requester': '*this', // this.$requester 对应 requester
+  '$http': 'request', // this.$http() 对应 requester.request()
+  '$httpWithLogin':'requestWithLogin', //this.$httpWithLogin() 对应 requester.requestWithLogin()
+};
+
+for (let [thisProp, requesterProp] of Object.entries(propMapThis2Requester)) {
+  let requesterTarget = requesterProp === '*this' ? requester : requester.makeAssignableMethod(requesterProp);
+  registerToThis(thisProp, requesterTarget);
+}
 
 export {
   requester,

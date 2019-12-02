@@ -6,7 +6,6 @@
 
 <script>
   import wepy from 'wepy';
-  import {loginCenter} from '@/lib/appPlugin';
 
   export default class extends wepy.page {
     config = {
@@ -25,7 +24,7 @@
 
     methods = {
       async onLogin(){
-        let loginRes = await loginCenter.login();
+        let loginRes = await this.$login();
         console.log('login finished, res:', loginRes);
       }
     }
