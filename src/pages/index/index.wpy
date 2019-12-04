@@ -27,6 +27,7 @@
   import wepy from 'wepy';
   import {noConcurrent} from 'fancy-mini/lib/decorator/noConcurrent';
   import DialogCommon from '@/components/fancy-mini/DialogCommon';
+  import {adaptiveOpen} from '@/lib/utils';
 
   export default class extends wepy.page {
     config = {
@@ -50,11 +51,11 @@
         {
           name: '小程序能力搭建/增强',
           features: [
-            {
+            /*{ //补全交互场景后再放开入口 -----
               title: '健壮高效的登录方案',
               desc: '界面可配、静默登录、自动登录、并发处理、过期处理',
               href: '/pages/loginTrigger/index'
-            },
+            },*/
             {
               title: '无限层级路由方案',
               desc: '系统性解决超过10层打不开新页面问题',
@@ -113,8 +114,14 @@
           ]
         },
         {
-          name: '更多功能逐步补全中...',
-          features: []
+          name: '全部',
+          features: [
+            {
+              title: '查看全部功能',
+              desc: '以上功能详细文档、更多不便/尚未提供演示的其它功能',
+              href: 'https://zhuanzhuanfe.github.io/fancy-mini/index.html',
+            }
+          ]
         },
       ],
     }
@@ -155,10 +162,11 @@
           }],
         });
       },
-      onFeature(cateIdx, feaIdx){
+      @noConcurrent
+      async onFeature(cateIdx, feaIdx){
         let feature = this.categories[cateIdx].features[feaIdx];
-        this.$wxPromise.navigateTo({
-          url: feature.href
+        await adaptiveOpen({
+          href: feature.href
         });
       }
     }
