@@ -37,6 +37,9 @@ export default class extends wepy.app {
       //通用弹窗
       'pages/dialog/dialog', //弹窗功能演示
       'pages/dialog/userRules', //弹窗功能演示-用户使用协议
+
+      //辅助页面
+      'pages/bridge/bridge', //落地中转页
     ],
     window: {
       backgroundTextStyle: 'light',

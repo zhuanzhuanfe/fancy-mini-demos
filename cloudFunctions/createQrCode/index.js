@@ -9,10 +9,8 @@ exports.main = async (event, context) => {
   let accessTokenRes = await cloud.callFunction({name: 'getAccessToken'});
 
   event.params = decodeURIComponent(event.params || '');
-  
-  const MAX_SCENE_WIDTH = 32;
-  let scene = '_'+event.params;
-  scene = scene.length>MAX_SCENE_WIDTH ? 'long_'+(await storeParams(event.params)) : scene;
+
+  let scene = event.params ? (await storeParams(event.params)) : '';
 
   let qrRes = await request.post({
     url: `https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=${accessTokenRes.result}`,

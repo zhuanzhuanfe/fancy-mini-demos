@@ -118,7 +118,7 @@
           features: [
             {
               title: '查看全部功能',
-              desc: '以上功能详细文档、更多不便/尚未提供演示的其它功能',
+              desc: '以上功能详细文档、更多不便演示/尚未演示的其它功能',
               href: 'https://zhuanzhuanfe.github.io/fancy-mini/index.html',
             }
           ]

@@ -1,0 +1,75 @@
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import qs from 'querystring';
+  import {adaptiveOpen} from '@/lib/utils';
+
+  /**
+   * 落地中转页
+   * 功能：
+   * 1. 自动跳转目标落地页，使用户打开小程序时能直达目标界面
+   * 2. 从目标落地页返回时自动重定向至首页，让用户可以体验其它功能，避免直接流失
+   */
+  export default class extends wepy.page {
+    config = {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: ' ',
+      navigationBarTextStyle: 'black'
+    }
+
+    components = {}
+
+    data = {
+      isInitShow: true,
+    }
+
+    computed = {}
+
+    methods = {}
+
+    async onLoad(options) {
+      //扫码进入，进行参数解码
+      if (options.scene) {
+        let decodeRes = await this.$http({
+          url: 'https://cloud.function/decodeQrParams',
+          data: {
+            scene: options.scene
+          }
+        });
+
+        if (decodeRes.code === 0)
+          options = qs.parse(decodeRes.paramsStr);
+      }
+
+      //参数提取
+      let url = decodeURIComponent(options.url);
+
+      //打开落地页
+      adaptiveOpen({href: url});
+    }
+
+    onShow(){
+      if (this.isInitShow) { //首次进入
+        this.isInitShow = false;
+      } else { //从落地页返回
+        this.$wxPromise.redirectTo({
+          url: '/pages/index/index'
+        });
+      }
+    }
+  }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+
+</style>
+<style lang="less" rel="stylesheet/less" scoped>
+
+</style>

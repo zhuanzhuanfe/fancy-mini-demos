@@ -66,16 +66,17 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 2,
 					"name": "temp2",
-					"pathName": "pages/tools/qrCode",
-					"query": "",
+					"pathName": "pages/bridge/bridge",
+					"query": "scene=72527ac65de9f78d00cb6bb63b208339",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "登录",
 					"pathName": "pages/loginTrigger/index",
+					"query": "",
 					"scene": null
 				}
 			]
